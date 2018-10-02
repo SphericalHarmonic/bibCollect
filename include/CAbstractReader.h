@@ -2,42 +2,54 @@
 #define CABSTRACTREADER_H
 
 #include <QObject>
+#include <QTime>
 
 class CAbstractReader : public QObject
 {
     Q_OBJECT
 
-    /*enum ReaderType
+    enum ReaderType
     {
-        R134kHz
-    };*/
+        UHF,
+        R134kHz,
+        LF
+    };
+
+    enum ReaderStatus
+    {
+        Disconnected,
+        Connected,
+        Running
+    };
 
 
 public:
-    /*explicit */CAbstractReader(QObject *parent = nullptr);
-
+    explicit CAbstractReader(QObject *parent = nullptr);
+    ~CAbstractReader();
 
 signals:
-    void tagReceived();
-    void statusMessage();
-    void connected();
+    void tag(QString, QTime);
+    void statusMessage(QString);
+    void connected(QString ip);
     void disconnected();
-    void error(QString);
+    void timeOut();
 
 public:
-    //QString readerName()
+    QString name() { return m_name; };
 
 
 public slots:
-    /*virtual bool connect();
-    virtual bool connect(QString ip, unsigned int port = 0);
-    virtual bool disconnect();
-    virtual bool setClock() = 0;*/
+    virtual bool connect() = 0;
+    virtual bool connect(QString ip, unsigned int port = 0) = 0;
+    virtual bool disconnect() = 0;
+    virtual bool setClock() = 0;
+    virtual bool start() = 0;
+    virtual bool stop() = 0;
 
 private:
-    //std::shared_ptr<QThread> m_readerThread;
-    QString m_readerName;
-    //ReaderType m_readerType;
+    QString m_name;
+    ReaderType m_readerType;
+    ReaderStatus m_status;
 };
 
 #endif // CABSTRACTREADER_H
