@@ -8,14 +8,16 @@ class CAbstractReader : public QObject
 {
     Q_OBJECT
 
+public:
+
     enum ReaderType
     {
         UHF,
-        R134kHz,
+        MF,
         LF
     };
 
-    enum ReaderStatus
+    enum ReaderState
     {
         Disconnected,
         Connected,
@@ -24,7 +26,7 @@ class CAbstractReader : public QObject
 
 
 public:
-    explicit CAbstractReader(QObject *parent = nullptr);
+    explicit CAbstractReader(QString name, QObject *parent = nullptr);
     ~CAbstractReader();
 
 signals:
@@ -33,23 +35,44 @@ signals:
     void connected(QString ip);
     void disconnected();
     void timeOut();
+    void nameChanged(QString);
 
 public:
-    QString name() { return m_name; };
+    QString name() { return m_name; }
+    ReaderState state() { return m_state; }
+    ReaderType type() { return m_readerType; }
+    virtual int batteryCharge() { return 0; }
+
 
 
 public slots:
-    virtual bool connect() = 0;
-    virtual bool connect(QString ip, unsigned int port = 0) = 0;
-    virtual bool disconnect() = 0;
+    virtual void connect() = 0;
+    virtual void connect(QString ip, unsigned int port = 0) = 0;
+    virtual void disconnect() = 0;
     virtual bool setClock() = 0;
     virtual bool start() = 0;
     virtual bool stop() = 0;
+    virtual void readTagHistory() = 0;
+    void setName(QString name) { m_name = name; }
+    void setIp(QString ip) { m_ip = ip; }
+    void setPort(unsigned int port) { m_port = port; }
+
+protected:
+
+    ReaderType m_readerType;
+    ReaderState m_state;
+
+    QString m_ip;
+    unsigned int m_port;
+
+    void increaseTagCount(const int tags)
+    {
+        m_tagCount += tags;
+    }
 
 private:
     QString m_name;
-    ReaderType m_readerType;
-    ReaderStatus m_status;
+    unsigned int m_tagCount;
 };
 
-#endif // CABSTRACTREADER_H
+#endif // CABSTRACTTRIGGER_H

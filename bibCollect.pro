@@ -1,6 +1,6 @@
 QT += qml quick quickcontrols2
 
-CONFIG += c++11
+CONFIG += c++14
 
 
 
@@ -8,7 +8,7 @@ RESOURCES += \
     qml/qml.qrc
 
 win32 {
-    gcc:QMAKE_CXXFLAGS += -c
+    gcc:QMAKE_CXXFLAGS +=  -std=c++14 -Wall -Wextra -pedantic
 }
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -33,17 +33,20 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-#HEADERS += \
-#    CAbstractReader.h
+
 
 INCLUDEPATH += ./include
 
 HEADERS += \
+    include/CUHFReader.h \
+    include/CReaderModel.h \
     include/CAbstractReader.h
 
 SOURCES += \ # main.cpp #\
-    source/CAbstractReader.cpp \
     source/main.cpp \
+    source/CUHFReader.cpp \
+    source/CAbstractReader.cpp \
+    source/CReaderModel.cpp
 
 
 DISTFILES += \
