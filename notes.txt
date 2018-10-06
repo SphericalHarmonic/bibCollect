@@ -1,0 +1,77 @@
+﻿Schnittstelle zu allen Readern: CReader
+Es muss möglich sein, mehrere Instanzen von CReader zu erzeugen und die entsprechenden signale mit slots zu verbinden (Zielzeiten, Zwischenzeiten...)
+- slot setReaderType()
+- slot connect() - startet einen Reader-spezifischen Thread, der die Kommunikation abwickelt
+- slot disconnect() - beendet den Reader-Thread
+- slot receive() - wird getriggert, wenn Reader-Thread daten empfängt
+---
+- signal message() - Log-Nachrichten
+- signal tagReceived() - übermittelt Zeit und Transpondercode (jeweils nur ein Ereignis) - evtl. auch Transpondertyp (abhängig von Readertyp)
+ 
+Reader-Thread (spezifisch für jeden Reader-Typen): CReaderThread_XXX
+>> QSerialPort oder QTcpSocket
+- slot start()
+- slot stop()
+- void run() - eigentliche Kommunikation und Verarbeitung der Nachrichten
+- slot setDateTime()
+- QString transponderType()
+---
+- signal tagsReceived(...) - sendet Zeit(en) und Transpondercode(s)
+- signal logMessage(QString) - Statusmeldungen
+- signal terminated() - nach erfolgreicher Beendung.
+ 
+GSM-Modem: CgsmModem
+Möglich: Startet eigenen Thread oder concurrent run, der die Nachrichtenliste abarbeitet.
+>> QSerialPort
+- slot setPin()
+- slot set...()
+- slot connect()
+- slot disconnect()
+- slot sendMessage(QString number, QString text, unsigned int index) - fügt die Nachricht einer Liste hinzu, die im hintergrund abgearbeitet wird
+---
+- signal logMessage()
+- signal connected()
+- signal disconnected()
+- signal messageSent(unsigned int index)
+ 
+Anzeigetafeln (QSerialPort)
+...
+ 
+Datenbank: Evtl. SQLite
+Zentrale Tabelle, die sämtliche Zeitnahmeereignisse erfasst:
+- alle Reader-Events (Startnummer + Zeit)
+- Startzeiten (Startnummer + Zeit)
+- Manuell erfasste Zeiten (Startnummer + Zeit)
+- spezielle Werte, wie das überspringen einer Zeitspalte.
+Diese Events sind unterscheidbar. Aus dieser Tabelle wird live die klassische Ergebnistabelle erzeugt. In der Originaltabelle können jedoch Zeiten deaktiviert oder geändert (?) werden, daraus kann eine neue Ergebnistabelle erzeugt werden (bzw. für den jeweiligen Teilnehmer).
+Parallel wird trotzdem eine Log-Datei geführt, die sämtliche Zeitnahmeereignisse und Bedienerinteraktionen erfasst.
+Wichtig: Die Datenbank muss Millisekunden speichern können!
+--
+Ergebnistabelle:
+- wird live erzeugt unter berücksichtigung der Erfassungssperre
+- Alternativ: wird ständig dynamisch aus der Ursprungstabelle erzeugt - Benötigt mehr ressourcen
+- Einfacher: Live-Erzeugung. Bei Veränderungen (Zeiten löschen, verändern, einfügen, leere Spalte einfügen...) wird die Ursprungstabelle bearbeitet und aus der entsprechenden neue Ergebnisdaten generiert.
+- Ergebnistabelle wird immer live angezeigt, ist sortier- und filterbar, Spalten können ausgeblendet werden, es gibt wieder ein Suchfeld
+- Anzeige wird durch JOYN aus Ergebnistabelle und Teilnehmerdaten generiert
+ 
+Konzept für Zuordnung von Readern und Ergebnisfeldern, Sind wieder verschiedene Modi notwendig?
+ 
+Projektstruktur
+
+Aufbau der Applikation
+- 1 Hauptfenster, Projekte können geladen, erstellt und gespeichert werden
+- Nur ein Projekt gleichzeitig
+
+Statistik-Anzeigen für schnellen überblick über Teilnehmer auf der Strecke, Zeiten, Verteilungen usw.
+
+
+Immer sichtbar:
+- Einlaufliste
+- Hauptansicht der Ergebnistabelle
+- Start-Widget
+- Uhr-Widget
+- Manuelle Erfassung
+Eingeschränkt sichtbar:
+- verschiedene Optionsebenen
+- Datenbankfilter 
+Wichtige Unterscheidungen: Einstellungen, die nur gemacht werden können, wenn der Reader nicht läuft - und andere Einstellungen.
