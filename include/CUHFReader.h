@@ -22,9 +22,23 @@ public slots:
     bool stop();
     void readTagHistory();
 
+    virtual QStringList availableGatingModes();
+
+    virtual QStringList availableTimingModes();
+
+    virtual bool useBackupAntenna() { return m_useBackupAntenna; }
+
+    virtual void setGatingMode(GatingMode gatingMode);
+
+    virtual void setTimingMode(TimingMode timingMode);
+
+    virtual void setUseBackupAntenna(bool useBackupAntenna);
+
 private:
     QTcpSocket* m_tcpSocket;
     QStateMachine m_stateMachine;
+
+
 
 };
 

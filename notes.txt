@@ -20,7 +20,37 @@ Reader-Thread (spezifisch für jeden Reader-Typen): CReaderThread_XXX
 ---
 - signal tagsReceived(...) - sendet Zeit(en) und Transpondercode(s)
 - signal logMessage(QString) - Statusmeldungen
-- signal terminated() - nach erfolgreicher Beendung.
+- signal terminated() - nach erfolgreicher Beendung.
+
+Der Kram bis hierher ist veraltet. Hier ein paar Gedanken zur Implementation des UHF-Readers:
+
+Zentrale Komponenten:
+- tcpSocket
+- stateMachine
+
+Mögliche Prozesse:
+
+- Verbindung herstellen
+-- Fehlschlag -> Status disconnected
+-- Erfolg -> Status connected
+- Reader starten
+-- Fehlschlag -> Status disconnected
+-- Erfolg -> Status running
+- Lesezustand
+-- entspricht Status running
+- Reader stoppen
+-- Erfolg -> Status connected
+- Verbindung trennen
+-- Erfolg -> Status disconnected
+
+- Uhrzeit setzen
+--> Status settingClock (timeOut berücksichtigen)
+
+- Batteriestatus abfragen
+--> Status checkBattery
+
+
+
 
 GSM-Modem: CgsmModem
 Möglich: Startet eigenen Thread oder concurrent run, der die Nachrichtenliste abarbeitet.

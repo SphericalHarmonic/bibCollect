@@ -10,7 +10,6 @@ class CReaderModel : public QAbstractListModel
 {
     Q_OBJECT
 
-public:
     enum ReaderRoles
     {
         NameRole = Qt::UserRole + 1,
@@ -18,37 +17,20 @@ public:
         StateRole,
         DeviceAdressRole,
         BatteryRole,
-        TagCountRole
+        TagCountRole,
+        GatingModeRole,
+        TimingModeRole,
+        InUseRole
     };
 
+public:
+
+    QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex & parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
     Q_INVOKABLE
-    QVariantMap getRow(int idx) const
-    {
-        QVariantMap map;
-        const auto roleNames = this->roleNames();
-
-        for (auto i = roleNames.begin(); i != roleNames.end(); ++i)
-        {
-            map[*i] = data(index(idx, 0), i.key());
-        }
-        return map;
-    }
-
-    QHash<int, QByteArray> roleNames() const
-    {
-        static QHash<int, QByteArray> roles;
-
-        if (roles.empty())
-        {
-               /* roles[PathRole] = "fileName";
-                roles[ClassRole] = "classIndex";
-                roles[RecognizedAsRole] = "recognizedAs";
-                roles[ConfidenceRole] = "confidence";
-                roles[SelectedRole] = "selected";
-                roles[FileNameRole] = "canonicalFileName";*/
-        }
-        return roles;
-    }
+    QVariantMap getRow(int idx) const;
 
     Q_INVOKABLE
     bool addReader(CAbstractReader::ReaderType type, QString name);

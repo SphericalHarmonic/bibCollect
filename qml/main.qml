@@ -10,7 +10,7 @@ ApplicationWindow
 {
 
     Material.theme: Material.Light
-    Material.accent: Universal.Cobalt
+    Material.accent: Material.DeepOrange
 
     visible: true
     width: 940

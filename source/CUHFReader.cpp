@@ -50,7 +50,7 @@ void CUHFReader::connect()
 {
     disconnect();
 
-    m_tcpSocket->connectToHost(m_ip, m_port);
+    m_tcpSocket->connectToHost(m_ip, static_cast<qint16>(m_port));
 }
 
 void CUHFReader::disconnect()
@@ -77,4 +77,31 @@ bool CUHFReader::stop()
 void CUHFReader::readTagHistory()
 {
 
+}
+
+QStringList CUHFReader::availableGatingModes()
+{
+    QStringList gatingModes;
+    return gatingModes;
+}
+
+QStringList CUHFReader::availableTimingModes()
+{
+    QStringList timingModes;
+    return timingModes;
+}
+
+void CUHFReader::setGatingMode(GatingMode gatingMode)
+{
+    m_gatingMode = gatingMode;
+}
+
+void CUHFReader::setTimingMode(TimingMode timingMode)
+{
+    m_timingMode = timingMode;
+}
+
+void CUHFReader::setUseBackupAntenna(bool useBackupAntenna)
+{
+    m_useBackupAntenna = useBackupAntenna;
 }

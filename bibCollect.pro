@@ -5,7 +5,8 @@ CONFIG += c++14
 
 
 RESOURCES += \
-    qml/qml.qrc
+    qml/qml.qrc \
+    img/img.qrc
 
 win32 {
     gcc:QMAKE_CXXFLAGS +=  -std=c++14 -Wall -Wextra -pedantic
@@ -50,10 +51,10 @@ SOURCES += \ # main.cpp #\
 
 
 DISTFILES += \
-    qml/Page1Form.ui.qml \
     qml/qtquickcontrols2.conf \
     qml/ClockWidget.qml \
     qml/HardwareTab.qml \
     qml/main.qml \
     qml/MainTabView.qml \
-    qml/Page1.qml
+    qml/Page1.qml \
+    img/delete20.png
