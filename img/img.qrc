@@ -2,5 +2,7 @@
     <qresource prefix="/img">
         <file>delete20.png</file>
         <file>edit20.png</file>
+        <file>add20.png</file>
+        <file>ok20.png</file>
     </qresource>
 </RCC>

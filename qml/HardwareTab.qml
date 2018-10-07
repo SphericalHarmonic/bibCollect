@@ -6,12 +6,12 @@ import QtGraphicalEffects 1.0
 Pane
 {
     id: hardwareTab
-
+    padding: 0
 
     RowLayout
     {
         anchors.fill: parent
-        spacing: 5
+        spacing: 3
 
         Item
         {
@@ -34,12 +34,14 @@ Pane
                         Layout.preferredHeight: 30
                         Layout.fillWidth: true
                         text: "Verfügbare Reader"
+                        font.pixelSize: 14
                     }
                     Pane
                     {
+                        padding:0
                         id: readerList
                         Layout.fillHeight: true
-                        Layout.fillWidth: true
+                        Layout.preferredHeight: 300
                         Layout.rightMargin: 5
                         ListView
                         {
@@ -49,11 +51,28 @@ Pane
                             delegate: readerDelegate
                         }
                     }
-                    Rectangle
+                    Pane
                     {
                         Layout.preferredHeight: 50
                         Layout.fillWidth: true
-                        color: "#333"
+
+                        Button
+                        {
+                            flat: true
+                            text: "Neuer Reader"
+                            icon.source: "img/add20.png"
+
+                            onClicked:
+                            {
+                                readerOptions.titleText = "Neuer Reader"
+                                readerOptions.show();
+                            }
+                        }
+                    }
+                    Pane
+                    {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
                     }
 
                 }
@@ -127,6 +146,12 @@ Pane
             ToolButton {icon.source: "img/delete20.png"}
 
         }
+    }
+
+    ReaderOptions
+    {
+        id: readerOptions
+        //visible: false;
     }
 
 }

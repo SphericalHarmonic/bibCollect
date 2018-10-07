@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls.Material 2.3
 
 Pane {
 
@@ -18,17 +19,17 @@ Pane {
     ColumnLayout
     {
         anchors.fill: parent
-        Rectangle
+        Pane
         {
-            Layout.minimumWidth: 280
+            Layout.minimumWidth: 320
             Layout.preferredHeight: 70
-            color: "black"
+            padding: 0
             Label {
                 id: timeDisplay
                 //text: displayTime + ".5"
-                font.pixelSize: 50
+                font.pixelSize: 60
                 font.family: "Consolas"
-                color: "orange"
+                color: "#EE4611"
 
                 anchors.centerIn: parent
             }
