@@ -2,11 +2,31 @@
 #include "CUHFReader.h"
 
 
-
-bool CReaderModel::addReader(CAbstractReader::ReaderType type, QString name)
+CReaderModel::CReaderModel()
+    :
+    m_currentIndex(-1)
 {
+    initializeReaderTypeList();
+}
 
-    switch (type) {
+void CReaderModel::initializeReaderTypeList()
+{
+    m_readerTypeList = CAbstractReader::readerTypeList();
+}
+
+QStringList CReaderModel::readerTypes()
+{
+    return m_readerTypeList;
+}
+
+bool CReaderModel::addReader(
+    CAbstractReader::ReaderType type,
+    QString name)
+{
+    beginResetModel();
+
+    switch (type)
+    {
     case CAbstractReader::UHF:
         //auto newReader = std::make_unique<CUHFReader>(name, this);
         m_readerList.push_back(std::make_unique<CUHFReader>(name, this));
@@ -16,10 +36,31 @@ bool CReaderModel::addReader(CAbstractReader::ReaderType type, QString name)
     case CAbstractReader::LF: //TODO
         break;
     }
-
+    endResetModel();
     //TODO: Check for success or change return type to void
     return true;
 }
+
+bool CReaderModel::addReader(
+    int type,
+    QString name,
+    QString address)
+{
+    bool added = addReader(static_cast<CAbstractReader::ReaderType>(type), name);
+    if (added)
+    {
+        m_readerList.back()->setIp(address);
+    }
+    return added;
+}
+
+bool CReaderModel::addReader(std::unique_ptr<CAbstractReader> reader)
+{
+    //TODO
+    return true;
+}
+
+
 
 
 QHash<int, QByteArray> CReaderModel::roleNames() const
@@ -39,6 +80,11 @@ QHash<int, QByteArray> CReaderModel::roleNames() const
             roles[InUseRole] = "inUse";
     }
     return roles;
+}
+
+int CReaderModel::roleIndex(QString roleName)
+{
+    return roleNames().key(roleName.toUtf8());
 }
 
 int CReaderModel::rowCount(const QModelIndex & /*parent*/) const
@@ -78,16 +124,17 @@ QVariant CReaderModel::data(const QModelIndex &index, int role) const
         return reader->gatingMode();
     case TimingModeRole:
         return reader->timingMode();
+    case InUseRole:
+        return !reader->suspended();
     default:
         return QVariant();
     }
 
+}
 
-    if (role == NameRole)
-    {
-       return reader->name();
-    }
-    return QVariant();
+QVariant CReaderModel::data(const int row, int role)
+{
+    return data(index(row), role);
 }
 
 QVariantMap CReaderModel::getRow(int idx) const

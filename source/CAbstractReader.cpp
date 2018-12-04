@@ -11,8 +11,8 @@ CAbstractReader::CAbstractReader(
     m_timingMode(TimingOnFinish),
     m_useBackupAntenna(false),
     m_name(name),
-    m_tagCount(0)
-
+    m_tagCount(0),
+    m_suspended(false)
 {
 
 }

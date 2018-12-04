@@ -16,7 +16,7 @@ Pane
         Item
         {
             Layout.fillHeight: true
-            Layout.preferredWidth: 300
+            Layout.preferredWidth: 350
             Pane
             {
                 id: readerListPane
@@ -47,7 +47,7 @@ Pane
                         {
                             id: readerView
                             anchors.fill: parent
-                            model: readerTestModel
+                            model: readerModel//readerTestModel
                             delegate: readerDelegate
                         }
                     }
@@ -64,7 +64,7 @@ Pane
 
                             onClicked:
                             {
-                                readerOptions.titleText = "Neuer Reader"
+                                readerOptions.setupForNewReader();
                                 readerOptions.show();
                             }
                         }
@@ -112,7 +112,7 @@ Pane
         }
         ListElement
         {
-            readerName: "Backup"
+            readerName: "Backup2"
             readerType: "UHF"
             readerState: 0
             readerAdress: "192.168.1.5"
@@ -141,7 +141,8 @@ Pane
                 font.bold: true
             }
             Text { text: readerType }
-            Text { text: readerAdress }
+            Text { text: readerAdress;  }
+            Item { Layout.fillWidth: true; Layout.preferredHeight: 40; Rectangle { anchors.fill: parent; color: "red" }}
             ToolButton {icon.source: "img/edit20.png"}
             ToolButton {icon.source: "img/delete20.png"}
 

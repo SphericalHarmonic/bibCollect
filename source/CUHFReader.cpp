@@ -21,7 +21,7 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
 
     //QObject::connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(displayIncomingMessages()));
 
-    /*stuff from versionchecker: Something similar to this can go into a function setUpStateMashine
+    /*stuff from versionchecker: Something similar to this can go into a function setUpStateMachine
      * connectState->addTransition(m_tcpSocket, SIGNAL(connected()), LOADState);
     connectState->addTransition(m_tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), connectErrorState);
     QObject::connect(connectState, SIGNAL(entered()), this, SLOT(connect()));

@@ -10,6 +10,14 @@ class CUHFReader : public CAbstractReader
 {
     Q_OBJECT
 
+signals:
+    void tag(QString, QTime);
+    void statusMessage(QString);
+   // void connected();
+   // void disconnected();
+    void timeOut();
+    void nameChanged(QString);
+
 public:
     CUHFReader(QString name, QObject *parent = nullptr);
 

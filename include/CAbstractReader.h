@@ -12,10 +12,20 @@ public:
 
     enum ReaderType
     {
-        UHF,
+        UHF = 0,
         MF,
         LF
     };
+
+    static QStringList readerTypeList()
+    {
+        QStringList typeList;
+        typeList
+                << "UHF"
+                << "MF"
+                << "LF";
+        return typeList;
+    }
 
     enum ReaderState
     {
@@ -24,17 +34,46 @@ public:
         Running
     };
 
+    static QStringList readerStateList()
+    {
+        QStringList stateList;
+        stateList
+                << "Disconnected"
+                << "Connected"
+                << "Running";
+        return stateList;
+    }
+
     enum GatingMode //??
     {
         None = 0,
         FirstTimeSeen
     };
 
+    static QStringList gatingModeList()
+    {
+        QStringList modeList;
+        modeList
+                << "None"
+                << "FirstTimeSeen";
+        return modeList;
+    }
+
     enum TimingMode //??
     {
         TimingOnStart = 0,
         TimingOnFinish
     };
+
+    static QStringList timingModeList()
+    {
+        QStringList timingList;
+        timingList
+                << "TimingOnStart"
+                << "TimingOnFinish";
+        return timingList;
+    }
+
 
 
 public:
@@ -44,7 +83,7 @@ public:
 signals:
     void tag(QString, QTime);
     void statusMessage(QString);
-    void connected(QString ip);
+    void connected();
     void disconnected();
     void timeOut();
     void nameChanged(QString);
@@ -122,6 +161,15 @@ public:
         return m_tagCount;
     }
 
+    bool suspended()
+    {
+        return m_suspended;
+    }
+    void setSuspended(const bool isSuspended)
+    {
+        m_suspended = isSuspended;
+    }
+
 protected:
 
     ReaderType m_readerType;
@@ -142,6 +190,7 @@ protected:
 private:
     QString m_name;
     unsigned int m_tagCount;
+    bool m_suspended;
 };
 
 #endif // CABSTRACTTRIGGER_H
