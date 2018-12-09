@@ -141,9 +141,21 @@ Pane
                 font.bold: true
             }
             Text { text: readerType }
-            Text { text: readerAdress;  }
+            Text { text: readerAddress;  }
             Item { Layout.fillWidth: true; Layout.preferredHeight: 40; Rectangle { anchors.fill: parent; color: "red" }}
-            ToolButton {icon.source: "img/edit20.png"}
+
+            ToolButton
+            {
+                icon.source: "img/edit20.png"
+
+                onClicked:
+                {
+                    readerOptions.setupForReader(index);
+                    readerOptions.show();
+                }
+            }
+
+
             ToolButton {icon.source: "img/delete20.png"}
 
         }

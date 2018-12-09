@@ -15,6 +15,7 @@ class CReaderModel : public QAbstractListModel
     {
         NameRole = Qt::UserRole + 1,
         TypeRole,
+        TypeIndexRole,
         StateRole,
         DeviceAdressRole,
         BatteryRole,

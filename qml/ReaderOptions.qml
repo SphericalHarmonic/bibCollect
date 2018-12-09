@@ -18,15 +18,22 @@ Window
         readerIndex = -1;
         cbReaderType.model = readerModel.readerTypes();
         cbReaderType.currentIndex = -1;
+        tfReaderName.clear();
+        tfReaderAddress.clear();
     }
 
     function setupForReader(i)
     {
-        index = parseInt(i);
+        var index = parseInt(i);
         if (index >= 0 && index < readerModel.rowCount())
         {
-            tfReaderName.text = readerModel.data(index, readerModel.roleIndex("readerName"));
+            titleText = "Reader bearbeiten";
+            cbReaderType.model = readerModel.readerTypes();
 
+            tfReaderName.text = readerModel.data(index, readerModel.roleIndex("readerName"));
+            cbReaderType.currentIndex = readerModel.data(index, readerModel.roleIndex("readerTypeIndex"));
+            tfReaderAddress.text = readerModel.data(index, readerModel.roleIndex("readerAddress"));
+            readerIndex = index;
         }
     }
 
@@ -60,7 +67,7 @@ Window
                     ColumnLayout
                     {
                         Layout.alignment: Qt.AlignTop
-                        Layout.preferredWidth: 180
+                        Layout.preferredWidth: 170
                         Layout.fillHeight: true
                         spacing: 10
                         Item
@@ -94,7 +101,7 @@ Window
                             TextField
                             {
                                 id: tfReaderAddress
-                                anchors.top: lbReaderAddress.bottom
+                                anchors.top: leReaderAddress.bottom
                                 placeholderText: "000.000.000.000"
                                 width: parent.width
 
@@ -110,7 +117,7 @@ Window
                     ColumnLayout
                     {
                         Layout.alignment: Qt.AlignTop
-                        Layout.preferredWidth: 180
+                        Layout.preferredWidth: 170
                         Layout.fillHeight: true
                         Item
                         {
@@ -183,6 +190,7 @@ Window
                     {
                         if (readerIndex < 0)
                         {
+                            console.log(tfReaderAddress.text)
                             readerModel.addReader(cbReaderType.currentIndex, tfReaderName.text, tfReaderAddress.text);
                             window.close();
                         }

@@ -4,6 +4,8 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
     :
     CAbstractReader(name, parent)
 {
+    m_readerType = UHF;
+
     m_tcpSocket = new QTcpSocket(this);
     if (!QObject::connect(
             m_tcpSocket, SIGNAL(connected()),

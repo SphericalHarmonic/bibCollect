@@ -23,7 +23,7 @@ bool CReaderModel::addReader(
     CAbstractReader::ReaderType type,
     QString name)
 {
-    beginResetModel();
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
     switch (type)
     {
@@ -36,7 +36,7 @@ bool CReaderModel::addReader(
     case CAbstractReader::LF: //TODO
         break;
     }
-    endResetModel();
+    endInsertRows();
     //TODO: Check for success or change return type to void
     return true;
 }
@@ -51,6 +51,7 @@ bool CReaderModel::addReader(
     {
         m_readerList.back()->setIp(address);
     }
+    emit dataChanged(index(rowCount() -1), index(rowCount()-1));
     return added;
 }
 
@@ -71,8 +72,9 @@ QHash<int, QByteArray> CReaderModel::roleNames() const
     {
             roles[NameRole] = "readerName";
             roles[TypeRole] = "readerType";
+            roles[TypeIndexRole] = "readerTypeIndex";
             roles[StateRole] = "readerState";
-            roles[DeviceAdressRole] = "readerAdress";
+            roles[DeviceAdressRole] = "readerAddress";
             roles[BatteryRole] = "batteryCharge";
             roles[TagCountRole] = "tagCount";
             roles[GatingModeRole] = "gatingMode";
@@ -112,6 +114,8 @@ QVariant CReaderModel::data(const QModelIndex &index, int role) const
         default:
             return QString("unbekannt");
         }
+    case TypeIndexRole:
+        return static_cast<int>(reader->type());
     case StateRole:
         return reader->state();
     case DeviceAdressRole:
