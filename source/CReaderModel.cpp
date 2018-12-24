@@ -61,7 +61,19 @@ bool CReaderModel::addReader(std::unique_ptr<CAbstractReader> reader)
     return true;
 }
 
+void CReaderModel::setIp(
+        const unsigned int row,
+        const QString ip)
+{
+    if (static_cast<int>(row) >= rowCount() ||
+        ip == m_readerList[row]->ip())
+    {
+        return;
+    }
 
+    m_readerList[row]->setIp(ip);
+    emit dataChanged(index(row), index(row), {DeviceAdressRole});
+}
 
 
 QHash<int, QByteArray> CReaderModel::roleNames() const

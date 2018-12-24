@@ -36,6 +36,12 @@ Window
             readerIndex = index;
         }
     }
+    
+    function allInputsAreValid()
+    {
+        //TODO: implement user input validity check
+        return true;
+    }
 
     Material.theme: Material.Light
     Material.accent: Material.DeepOrange
@@ -190,13 +196,16 @@ Window
                     {
                         if (readerIndex < 0)
                         {
-                            console.log(tfReaderAddress.text)
                             readerModel.addReader(cbReaderType.currentIndex, tfReaderName.text, tfReaderAddress.text);
                             window.close();
                         }
                         else
                         {
-                            readerModel.setIp(readerIndex, tfReaderAddress.text)
+                            if (allInputsAreValid())
+                            {
+                                readerModel.setIp(readerIndex, tfReaderAddress.text)
+                                window.close();
+                            }
                         }
                     }
                 }

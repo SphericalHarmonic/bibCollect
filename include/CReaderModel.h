@@ -55,6 +55,9 @@ class CReaderModel : public QAbstractListModel
     Q_INVOKABLE
     QStringList readerTypes();
 
+    Q_INVOKABLE
+    void setIp(const unsigned int row,
+               const QString ip);
 
 private:
     std::vector<std::unique_ptr<CAbstractReader>> m_readerList;
