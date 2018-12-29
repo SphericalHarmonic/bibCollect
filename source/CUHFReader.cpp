@@ -1,21 +1,22 @@
 #include "CUHFReader.h"
 
+
 CUHFReader::CUHFReader(QString name, QObject* parent)
     :
     CAbstractReader(name, parent)
 {
     m_readerType = UHF;
 
-    m_tcpSocket = new QTcpSocket(this);
+    m_tcpSocket = std::make_unique<QTcpSocket>(this);
     if (!QObject::connect(
-            m_tcpSocket, SIGNAL(connected()),
+            m_tcpSocket.get(), SIGNAL(connected()),
             this, SIGNAL(connected())))
     {
         throw QString("Invalid QObject connection (CUHFReader, connected())");
     }
 
     if (!QObject::connect(
-            m_tcpSocket, SIGNAL(disconnected()),
+            m_tcpSocket.get(), SIGNAL(disconnected()),
             this, SIGNAL(disconnected())))
     {
         throw QString("Invalid QObject connection (CUHFReader, disconnected())");
@@ -106,4 +107,51 @@ void CUHFReader::setTimingMode(TimingMode timingMode)
 void CUHFReader::setUseBackupAntenna(bool useBackupAntenna)
 {
     m_useBackupAntenna = useBackupAntenna;
+}
+
+void CUHFReader::readMessage(QString messageString)
+{
+    constexpr char LF = '\n';
+
+    auto messages = messageString.split(LF);
+
+    for (auto& message : messages)
+    {
+        //Chip read
+        if (message.length() > 1
+            && message[0] == '0'
+            && message[1] == ',')
+        {
+            processChipRead(message);
+        }
+
+        //Connection established
+        else if (message.contains("Connected"))
+        {
+            processConnectionEstablished(message);
+        }
+
+        //Voltage status
+        else if(message.length() > 0
+                && message[0] == 'V')
+        {
+            processVoltage(message);
+        }
+
+        //Setting acknowlegdement
+        else if(message.length() > 0
+                && message[0] == 'u')
+        {
+            settingAcknowledged(message);
+        }
+
+        //Receive Setting after settings query:
+        else if(message.length() > 0
+                && message[0] == 'U')
+        {
+            settingAcknowledged(message);
+        }
+
+
+    }
 }

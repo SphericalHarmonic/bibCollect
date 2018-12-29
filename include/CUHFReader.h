@@ -1,6 +1,8 @@
 #ifndef CUHFREADER_H
 #define CUHFREADER_H
 
+#include <memory>
+
 //#include <QObject>
 #include <QStateMachine>
 #include <QTcpSocket>
@@ -43,8 +45,11 @@ public slots:
     virtual void setUseBackupAntenna(bool useBackupAntenna);
 
 private:
-    QTcpSocket* m_tcpSocket;
+    std::unique_ptr<QTcpSocket> m_tcpSocket;
     QStateMachine m_stateMachine;
+
+private slots:
+    void readMessage(QString message);
 
 
 
