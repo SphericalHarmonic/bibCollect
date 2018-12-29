@@ -81,7 +81,7 @@ public:
     ~CAbstractReader();
 
 signals:
-    void tag(QString, QTime);
+    void tag(QString, QDateTime);
     void statusMessage(QString);
     void connected();
     void disconnected();

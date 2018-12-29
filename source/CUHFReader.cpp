@@ -1,5 +1,8 @@
 #include "CUHFReader.h"
 
+const QDateTime CUHFReader::ultraReferenceTime =
+        QDateTime::fromString("1980-01-01T00:00:00 ", Qt::ISODate);
+
 
 CUHFReader::CUHFReader(QString name, QObject* parent)
     :
@@ -149,9 +152,113 @@ void CUHFReader::readMessage(QString messageString)
         else if(message.length() > 0
                 && message[0] == 'U')
         {
-            settingAcknowledged(message);
+            settingRequested(message);
         }
 
 
     }
+}
+
+void CUHFReader::processVoltage(QString message)
+{
+    const auto parts = message.trimmed().split('=');
+    if (parts.length() < 2)
+    {
+        return;
+    }
+
+    bool validVoltage = false;
+    const double voltage = parts[1].toDouble(&validVoltage);
+    if (validVoltage)
+    {
+        //TODO:
+        //emit the voltage value
+        //refresh the reader connection timer
+    }
+
+    //TODO:
+    //What should be done with invalid messages?
+}
+
+
+
+void CUHFReader::processChipRead(QString message)
+{
+    const auto chipData = parseChip(message);
+
+    if (chipData.isValid)
+    {
+        emit tag(chipData.chipCode, chipData.timeStamp);
+    }
+
+    //TODO:
+    //What should be done with invalid messages?
+    //
+}
+
+CUHFReader::ChipData CUHFReader::parseChip(
+    QString chip) const
+{
+    CUHFReader::ChipData chipData;
+    const auto values = chip.trimmed().split(',');
+    if (values.length() != 12)
+    {
+        return chipData;
+    }
+
+    bool validField;
+
+    chipData.chipCode = values[1];
+    chipData.timeStamp = parseChipTime(values[2], values[3], &validField);
+
+    chipData.isValid = validField;
+
+    //TODO: parse the other fields if needed.
+
+    return chipData;
+}
+
+QDateTime CUHFReader::parseChipTime(
+    QString seconds,
+    QString milliseconds,
+    bool* timeIsValid) const
+{
+    if (timeIsValid != nullptr)
+    {
+        *timeIsValid = false;
+    }
+
+    bool validSeconds = false;
+    const int sec = seconds.toInt(&validSeconds);
+    if (sec < 0)
+    {
+        validSeconds = false;
+    }
+
+    bool validMilliseconds;
+    const int milli = milliseconds.toInt(&validMilliseconds);
+    if (milli < 0 )
+    {
+        validMilliseconds = false;
+    }
+
+    QDateTime time;
+
+    if (validMilliseconds && validMilliseconds)
+    {
+        if (timeIsValid != nullptr)
+        {
+            *timeIsValid = true;
+        }
+        time = chipTime(sec, milli);
+    }
+
+    return time;
+}
+
+QDateTime CUHFReader::chipTime(
+    const int seconds,
+    const int milliseconds) const
+{
+    return ultraReferenceTime.addMSecs(seconds*1000 + milliseconds);
 }
