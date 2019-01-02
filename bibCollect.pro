@@ -1,4 +1,4 @@
-QT += qml quick quickcontrols2
+QT += qml quick quickcontrols2 testlib
 
 CONFIG += c++14
 
@@ -41,13 +41,17 @@ INCLUDEPATH += ./include
 HEADERS += \
     include/CUHFReader.h \
     include/CReaderModel.h \
-    include/CAbstractReader.h
+    include/CAbstractReader.h \
+    include/CReaderParser.h \
+    include/testcreaderparser.h
 
 SOURCES += \ # main.cpp #\
     source/main.cpp \
     source/CUHFReader.cpp \
     source/CAbstractReader.cpp \
-    source/CReaderModel.cpp
+    source/CReaderModel.cpp \
+    include/CReaderParser.cpp \
+    include/testcreaderparser.cpp
 
 
 DISTFILES += \

@@ -1,7 +1,6 @@
 #include "CUHFReader.h"
+#include "CReaderParser.h"
 
-const QDateTime CUHFReader::ultraReferenceTime =
-        QDateTime::fromString("1980-01-01T00:00:00 ", Qt::ISODate);
 
 
 CUHFReader::CUHFReader(QString name, QObject* parent)
@@ -184,7 +183,7 @@ void CUHFReader::processVoltage(QString message)
 
 void CUHFReader::processChipRead(QString message)
 {
-    const auto chipData = parseChip(message);
+    const auto chipData = CReaderParser::parseUltraChip(message);
 
     if (chipData.isValid)
     {
@@ -196,69 +195,12 @@ void CUHFReader::processChipRead(QString message)
     //
 }
 
-CUHFReader::ChipData CUHFReader::parseChip(
-    QString chip) const
+void CUHFReader::processConnectionEstablished(QString message)
 {
-    CUHFReader::ChipData chipData;
-    const auto values = chip.trimmed().split(',');
-    if (values.length() != 12)
-    {
-        return chipData;
-    }
+    Q_UNUSED(message)
 
-    bool validField;
+    //do some state change
 
-    chipData.chipCode = values[1];
-    chipData.timeStamp = parseChipTime(values[2], values[3], &validField);
-
-    chipData.isValid = validField;
-
-    //TODO: parse the other fields if needed.
-
-    return chipData;
+    emit connected();
 }
 
-QDateTime CUHFReader::parseChipTime(
-    QString seconds,
-    QString milliseconds,
-    bool* timeIsValid) const
-{
-    if (timeIsValid != nullptr)
-    {
-        *timeIsValid = false;
-    }
-
-    bool validSeconds = false;
-    const int sec = seconds.toInt(&validSeconds);
-    if (sec < 0)
-    {
-        validSeconds = false;
-    }
-
-    bool validMilliseconds;
-    const int milli = milliseconds.toInt(&validMilliseconds);
-    if (milli < 0 )
-    {
-        validMilliseconds = false;
-    }
-
-    QDateTime time;
-
-    if (validMilliseconds && validMilliseconds)
-    {
-        if (timeIsValid != nullptr)
-        {
-            *timeIsValid = true;
-        }
-        time = chipTime(sec, milli);
-    }
-
-    return time;
-}
-
-QDateTime CUHFReader::chipTime(
-    const int seconds,
-    const int milliseconds) const
-{
-    return ultraReferenceTime.addMSecs(seconds*1000 + milliseconds);
-}
