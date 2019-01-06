@@ -43,7 +43,7 @@ private:
     QTimer m_connectionTimer;
 
 private slots:
-    void readMessage(QString message);
+    void readMessage();
     void handleDisconnected();
     void readerTimeout();
 
@@ -52,8 +52,8 @@ private:
     void processChipRead(QString message);
     void processConnectionEstablished(QString message);
     void processVoltage(QString message);
-    void settingAcknowledged(QString message);
-    void settingRequested(QString message);
+    void settingAcknowledged(QString message){}
+    void settingRequested(QString message){}
 
 };
 

@@ -36,6 +36,12 @@ Window
             readerIndex = index;
         }
     }
+    
+    function allInputsAreValid()
+    {
+        //TODO: implement user input validity check
+        return true;
+    }
 
     Material.theme: Material.Light
     Material.accent: Material.DeepOrange
@@ -101,11 +107,11 @@ Window
                             TextField
                             {
                                 id: tfReaderAddress
-                                anchors.top: leReaderAddress.bottom
-                                placeholderText: "000.000.000.000"
+                                anchors.top: lbReaderAddress.bottom
+                                placeholderText: "192.168.0.1"
                                 width: parent.width
 
-                                inputMask: "000.000.000.000:0"
+                                //inputMask: "000.000.000.000:0"
                                 //validator: RegExpValidator {
                                 //    regExp: /^((?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5]).){3}(?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5])$/
                                 //}
@@ -133,6 +139,29 @@ Window
                                 id: cbReaderType
                                 anchors.top: lbReaderType.bottom
                                 width: parent.width
+                            }
+
+                        }
+                        Item
+                        {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 50
+                            Text
+                            {
+                                id: lbReaderPort
+                                text: "Port/COM"
+                            }
+                            TextField
+                            {
+                                id: tfReaderPort
+                                anchors.top: lbReaderPort.bottom
+                                placeholderText: "42"
+                                width: parent.width
+
+                                //inputMask: "000.000.000.000:0"
+                                //validator: RegExpValidator {
+                                //    regExp: /^((?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5]).){3}(?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5])$/
+                                //}
                             }
 
                         }
@@ -190,13 +219,16 @@ Window
                     {
                         if (readerIndex < 0)
                         {
-                            console.log(tfReaderAddress.text)
                             readerModel.addReader(cbReaderType.currentIndex, tfReaderName.text, tfReaderAddress.text);
                             window.close();
                         }
                         else
                         {
-                            readerModel.setIp(readerIndex, tfReaderAddress.text)
+                            if (allInputsAreValid())
+                            {
+                                readerModel.setIp(readerIndex, tfReaderAddress.text + ':' + tfReaderPort.text);
+                                window.close();
+                            }
                         }
                     }
                 }

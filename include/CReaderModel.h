@@ -22,7 +22,8 @@ class CReaderModel : public QAbstractListModel
         TagCountRole,
         GatingModeRole,
         TimingModeRole,
-        InUseRole
+        InUseRole,
+        StateColorRole
     };
 
 
@@ -59,6 +60,13 @@ class CReaderModel : public QAbstractListModel
     void setIp(const unsigned int row,
                const QString ip);
 
+
+    Q_INVOKABLE
+    void startReader(const unsigned int row);
+
+    Q_INVOKABLE
+    void connectReader(const unsigned int row);
+
 private:
     std::vector<std::unique_ptr<CAbstractReader>> m_readerList;
 
@@ -69,6 +77,10 @@ private:
     void initializeReaderTypeList();
 
     int m_currentIndex;
+
+private slots:
+    void notifyStateChange();
+    int indexOfReader(CAbstractReader* readerToFind);
 
 };
 

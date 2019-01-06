@@ -25,7 +25,15 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
         throw QString("Invalid QObject connection (CUHFReader, handleDisconnected())");
     }
 
+    if (!QObject::connect(
+            m_tcpSocket.get(), SIGNAL(readyRead()),
+            this, SLOT(readMessage())))
+    {
+        throw QString("Invalid QObject connection (CUHFReader, readyRead())");
+    }
+
     m_connectionTimer.setInterval(connectionTestTime);
+    m_connectionTimer.setSingleShot(true);
     if (!QObject::connect(
             &m_connectionTimer, SIGNAL(timeout()),
             this, SLOT(readerTimeout())))
@@ -60,14 +68,25 @@ void CUHFReader::connect(QString ip, unsigned int port)
     connect();
 }
 
+QString parseIp(QString address)
+{
+    if (!address.contains(':'))
+    {
+        return address;
+    }
+    auto parts = address.split(':');
+    return parts.front();
+}
+
 void CUHFReader::connect()
 {
+    qDebug() << "attempting to connect...";
     if (m_tcpSocket->state() != QAbstractSocket::UnconnectedState)
     {
         m_tcpSocket->disconnectFromHost();
         m_tcpSocket->waitForDisconnected(); //might fail under windows sometimes
     }
-    m_tcpSocket->connectToHost(m_ip, static_cast<qint16>(m_port));
+    m_tcpSocket->connectToHost(parseIp(m_ip), 23); //23 is the only possible port for the Ultra
 }
 
 
@@ -148,9 +167,16 @@ void CUHFReader::setUseBackupAntenna(bool useBackupAntenna)
     m_useBackupAntenna = useBackupAntenna;
 }
 
-void CUHFReader::readMessage(QString messageString)
+void CUHFReader::readMessage( )
 {
     constexpr char LF = '\n';
+
+    if (!m_tcpSocket->canReadLine())
+    {
+        return;
+    }
+
+    const auto messageString = QString::fromStdString(m_tcpSocket->readLine().toStdString());
 
     auto messages = messageString.split(LF);
 
@@ -211,7 +237,7 @@ void CUHFReader::processVoltage(QString message)
 
         emit batteryVoltage(voltage);
         //refresh the reader connection timer
-        m_connectionTimer.
+        m_connectionTimer.start();
     }
 
     //TODO:
@@ -240,6 +266,7 @@ void CUHFReader::processConnectionEstablished(QString message)
 
     //do some state change
     m_state = Connected;
+    m_connectionTimer.start();
 
     emit connected();
 }

@@ -28,7 +28,6 @@ bool CReaderModel::addReader(
     switch (type)
     {
     case CAbstractReader::UHF:
-        //auto newReader = std::make_unique<CUHFReader>(name, this);
         m_readerList.push_back(std::make_unique<CUHFReader>(name, this));
         break;
     case CAbstractReader::MF: //TODO
@@ -50,6 +49,18 @@ bool CReaderModel::addReader(
     if (added)
     {
         m_readerList.back()->setIp(address);
+        QObject::connect(
+            m_readerList.back().get(), SIGNAL(connected()),
+            this, SLOT(notifyStateChange()));
+        QObject::connect(
+            m_readerList.back().get(), SIGNAL(readingStarted()),
+            this, SLOT(notifyStateChange()));
+        QObject::connect(
+            m_readerList.back().get(), SIGNAL(readingStopped()),
+            this, SLOT(notifyStateChange()));
+        QObject::connect(
+            m_readerList.back().get(), SIGNAL(disconnected()),
+            this, SLOT(notifyStateChange()));
     }
     emit dataChanged(index(rowCount() -1), index(rowCount()-1));
     return added;
@@ -76,6 +87,7 @@ void CReaderModel::setIp(
 }
 
 
+
 QHash<int, QByteArray> CReaderModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
@@ -92,6 +104,7 @@ QHash<int, QByteArray> CReaderModel::roleNames() const
             roles[GatingModeRole] = "gatingMode";
             roles[TimingModeRole] = "timingMode";
             roles[InUseRole] = "inUse";
+            roles[StateColorRole] = "readerStateColor";
     }
     return roles;
 }
@@ -163,4 +176,40 @@ QVariantMap CReaderModel::getRow(int idx) const
         map[*i] = data(index(idx, 0), i.key());
     }
     return map;
+}
+
+void CReaderModel::startReader(const unsigned int row)
+{
+    m_readerList[row]->start();
+}
+
+void CReaderModel::connectReader(const unsigned int row)
+{
+    m_readerList[row]->connect();
+}
+
+int CReaderModel::indexOfReader(CAbstractReader* readerToFind)
+{
+    int index = -1;
+    for (size_t i = 0; i < m_readerList.size(); i++)
+    {
+        if (m_readerList[i]->name() == readerToFind->name()
+         && m_readerList[i]->ip() == readerToFind->ip())
+        {
+            index = static_cast<int>(i);
+            break;
+        }
+    }
+    return index;
+}
+
+void CReaderModel::notifyStateChange()
+{
+    qDebug() << "notifyStateChange";
+    auto sender = qobject_cast<CAbstractReader*>(QObject::sender());
+    const auto row = indexOfReader(sender);
+    if (row >= 0 && row < static_cast<int>(m_readerList.size()))
+    {
+        emit dataChanged(index(row), index(row));
+    }
 }

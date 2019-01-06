@@ -53,12 +53,12 @@ ApplicationWindow
                             font.pixelSize: 14
                             font.bold: true
                             Layout.fillHeight: true
-                            Layout.preferredWidth: 150
+                            Layout.preferredWidth: 200
 
-                            Label {
-                                text: "status"
-                                anchors.centerIn: parent
-                                anchors.horizontalCenter: parent.Center
+                            ListView
+                            {
+                                model: readerModel
+                                delegate: readerQuickInfo
                             }
                         }
 
@@ -201,5 +201,78 @@ ApplicationWindow
         }
     }
 
+
+    Component
+    {
+        id: readerQuickInfo
+        Rectangle
+        {
+            id: quickInfoBackground
+            width: parent.width
+            height: 40
+            color: "#ddd"
+
+            RowLayout
+            {
+                anchors.fill: parent
+
+                ColumnLayout
+                {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Text {
+                        text: readerName
+                        font.bold: true
+                    }
+                    Text { text: readerAddress  }
+                }
+
+                Item
+                {
+                    //quickInfoSign and or button
+                }
+
+                Rectangle
+                {
+                    width: 35
+                    height: 35
+                    color:
+                    { if (readerState === 0)
+                        { return "red"; }
+                        else if (readerState === 1)
+                        { return "yellow"; }
+                        else
+                        { return "green"; }
+                    }
+                    radius: 3
+                }
+
+                ToolButton
+                {
+                    icon.source: "img/play48.png"
+                    onClicked:
+                    {
+                        readerModel.connectReader(index);
+                    }
+                }
+                ToolButton
+                {
+                    icon.source: "img/play48.png"
+                    onClicked:
+                    {
+                        readerModel.startReader(index);
+                    }
+                }
+
+            }
+
+
+
+
+            //Item { Layout.fillWidth: true; Layout.preferredHeight: 40; Rectangle { anchors.fill: parent; color: "red" }}
+
+
+        }
+    }
 
 }
