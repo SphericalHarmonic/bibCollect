@@ -7,6 +7,7 @@
 #include <QStateMachine>
 #include <QTcpSocket>
 #include <CAbstractReader.h>
+#include <qtimer.h>
 
 class CUHFReader : public CAbstractReader
 {
@@ -39,9 +40,12 @@ public slots:
 private:
     std::unique_ptr<QTcpSocket> m_tcpSocket;
     QStateMachine m_stateMachine;
+    QTimer m_connectionTimer;
 
 private slots:
     void readMessage(QString message);
+    void handleDisconnected();
+    void readerTimeout();
 
 private:
 

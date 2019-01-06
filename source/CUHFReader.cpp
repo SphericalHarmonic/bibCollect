@@ -1,6 +1,7 @@
 #include "CUHFReader.h"
 #include "CReaderParser.h"
 
+const int connectionTestTime = 11000; //11 seconds
 
 
 CUHFReader::CUHFReader(QString name, QObject* parent)
@@ -10,18 +11,26 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
     m_readerType = UHF;
 
     m_tcpSocket = std::make_unique<QTcpSocket>(this);
-    if (!QObject::connect(
+    /*if (!QObject::connect(
             m_tcpSocket.get(), SIGNAL(connected()),
-            this, SIGNAL(connected())))
+            this, SLOT(handleConnected())))
     {
         throw QString("Invalid QObject connection (CUHFReader, connected())");
-    }
+    }*/
 
     if (!QObject::connect(
             m_tcpSocket.get(), SIGNAL(disconnected()),
-            this, SIGNAL(disconnected())))
+            this, SLOT(handleDisconnected())))
     {
-        throw QString("Invalid QObject connection (CUHFReader, disconnected())");
+        throw QString("Invalid QObject connection (CUHFReader, handleDisconnected())");
+    }
+
+    m_connectionTimer.setInterval(connectionTestTime);
+    if (!QObject::connect(
+            &m_connectionTimer, SIGNAL(timeout()),
+            this, SLOT(readerTimeout())))
+    {
+        throw QString("Invalid QObject connection (CUHFReader, readerTimeout())");
     }
 
     //QObject::connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(displayIncomingMessages()));
@@ -53,15 +62,37 @@ void CUHFReader::connect(QString ip, unsigned int port)
 
 void CUHFReader::connect()
 {
-    disconnect();
-
+    if (m_tcpSocket->state() != QAbstractSocket::UnconnectedState)
+    {
+        m_tcpSocket->disconnectFromHost();
+        m_tcpSocket->waitForDisconnected(); //might fail under windows sometimes
+    }
     m_tcpSocket->connectToHost(m_ip, static_cast<qint16>(m_port));
 }
 
+
+
+
 void CUHFReader::disconnect()
 {
+    if (m_state == Running)
+    {
+        stop();
+    }
     m_tcpSocket->disconnectFromHost();
-    m_tcpSocket->waitForDisconnected();
+    //m_tcpSocket->waitForDisconnected();
+}
+
+void CUHFReader::handleDisconnected()
+{
+    m_state = Disconnected;
+    emit disconnected();
+}
+
+void CUHFReader::readerTimeout()
+{
+    emit timeOut();
+    //TODO: change state, reset connection...
 }
 
 bool CUHFReader::setClock()
@@ -71,12 +102,18 @@ bool CUHFReader::setClock()
 
 bool CUHFReader::start()
 {
-    return false;
+    m_tcpSocket->write("R");
+    m_state = Running;
+    emit readingStarted();
+    return true;
 }
 
 bool CUHFReader::stop()
 {
-    return false;
+    m_tcpSocket->write("S");
+    m_state = Connected;
+    emit readingStopped();
+    return true;
 }
 
 void CUHFReader::readTagHistory()
@@ -171,8 +208,10 @@ void CUHFReader::processVoltage(QString message)
     if (validVoltage)
     {
         //TODO:
-        //emit the voltage value
+
+        emit batteryVoltage(voltage);
         //refresh the reader connection timer
+        m_connectionTimer.
     }
 
     //TODO:
@@ -200,6 +239,7 @@ void CUHFReader::processConnectionEstablished(QString message)
     Q_UNUSED(message)
 
     //do some state change
+    m_state = Connected;
 
     emit connected();
 }

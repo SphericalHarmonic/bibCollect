@@ -87,6 +87,9 @@ signals:
     void disconnected();
     void timeOut();
     void nameChanged(QString);
+    void readingStarted();
+    void readingStopped();
+    void batteryVoltage(double);
 
 public:
     QString name() const
