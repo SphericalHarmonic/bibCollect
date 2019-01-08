@@ -2,6 +2,7 @@
 #include "CReaderParser.h"
 
 const int connectionTestTime = 11000; //11 seconds
+const int connectionEstablishTime = 2000; //2 seconds
 
 
 CUHFReader::CUHFReader(QString name, QObject* parent)
@@ -32,14 +33,24 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
         throw QString("Invalid QObject connection (CUHFReader, readyRead())");
     }
 
-    m_connectionTimer.setInterval(connectionTestTime);
-    m_connectionTimer.setSingleShot(true);
+    m_testConnectionTimer.setInterval(connectionTestTime);
+    m_testConnectionTimer.setSingleShot(true);
     if (!QObject::connect(
-            &m_connectionTimer, SIGNAL(timeout()),
+            &m_testConnectionTimer, SIGNAL(timeout()),
             this, SLOT(readerTimeout())))
     {
         throw QString("Invalid QObject connection (CUHFReader, readerTimeout())");
     }
+
+    m_establishConnectionTimer.setInterval(connectionEstablishTime);
+    m_establishConnectionTimer.setSingleShot(false);
+    if (!QObject::connect(
+            &m_establishConnectionTimer, SIGNAL(timeout()),
+            this, SLOT(connect())))
+    {
+        throw QString("Invalid QObject connection (CUHFReader, readerTimeout())");
+    }
+    m_establishConnectionTimer.start();
 
     //QObject::connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(displayIncomingMessages()));
 
@@ -80,13 +91,17 @@ QString parseIp(QString address)
 
 void CUHFReader::connect()
 {
-    qDebug() << "attempting to connect...";
-    if (m_tcpSocket->state() != QAbstractSocket::UnconnectedState)
+    if (m_tcpSocket->state() != QAbstractSocket::ConnectedState)
     {
-        m_tcpSocket->disconnectFromHost();
-        m_tcpSocket->waitForDisconnected(); //might fail under windows sometimes
+        qDebug() << "attempting to connect...";
+        if (m_tcpSocket->state() != QAbstractSocket::UnconnectedState)
+        {
+            m_tcpSocket->disconnectFromHost();
+            m_tcpSocket->waitForDisconnected(); //might fail under windows sometimes
+        }
+
+        m_tcpSocket->connectToHost(parseIp(m_ip), 23); //23 is the only possible port for the Ultra
     }
-    m_tcpSocket->connectToHost(parseIp(m_ip), 23); //23 is the only possible port for the Ultra
 }
 
 
@@ -102,10 +117,22 @@ void CUHFReader::disconnect()
     //m_tcpSocket->waitForDisconnected();
 }
 
+void CUHFReader::handleConnected()
+{
+    m_establishConnectionTimer.stop();
+}
+
 void CUHFReader::handleDisconnected()
 {
     m_state = Disconnected;
     emit disconnected();
+    qDebug() << "disconnected";
+
+    if (!suspended())
+    {
+        m_establishConnectionTimer.start();
+        qDebug() << "reconnection timer startet";
+    }
 }
 
 void CUHFReader::readerTimeout()
@@ -237,7 +264,7 @@ void CUHFReader::processVoltage(QString message)
 
         emit batteryVoltage(voltage);
         //refresh the reader connection timer
-        m_connectionTimer.start();
+        m_testConnectionTimer.start();
     }
 
     //TODO:
@@ -266,7 +293,8 @@ void CUHFReader::processConnectionEstablished(QString message)
 
     //do some state change
     m_state = Connected;
-    m_connectionTimer.start();
+    m_establishConnectionTimer.stop();
+    m_testConnectionTimer.start();
 
     emit connected();
 }

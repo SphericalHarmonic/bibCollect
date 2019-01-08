@@ -5,5 +5,7 @@
         <file>add20.png</file>
         <file>ok20.png</file>
         <file>play48.png</file>
+        <file>circle_checked_20.png</file>
+        <file>circle_unchecked_20.png</file>
     </qresource>
 </RCC>

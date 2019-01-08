@@ -104,7 +104,6 @@ QHash<int, QByteArray> CReaderModel::roleNames() const
             roles[GatingModeRole] = "gatingMode";
             roles[TimingModeRole] = "timingMode";
             roles[InUseRole] = "inUse";
-            roles[StateColorRole] = "readerStateColor";
     }
     return roles;
 }
@@ -142,7 +141,8 @@ QVariant CReaderModel::data(const QModelIndex &index, int role) const
     case TypeIndexRole:
         return static_cast<int>(reader->type());
     case StateRole:
-        return reader->state();
+        qDebug() << "readerState: " << static_cast<int>(reader->state());
+        return static_cast<int>(reader->state());
     case DeviceAdressRole:
         return QString("%1:%2").arg(reader->ip()).arg(reader->port());
     case BatteryRole:

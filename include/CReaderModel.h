@@ -22,8 +22,7 @@ class CReaderModel : public QAbstractListModel
         TagCountRole,
         GatingModeRole,
         TimingModeRole,
-        InUseRole,
-        StateColorRole
+        InUseRole
     };
 
 

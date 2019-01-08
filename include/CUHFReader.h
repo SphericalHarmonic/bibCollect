@@ -40,11 +40,13 @@ public slots:
 private:
     std::unique_ptr<QTcpSocket> m_tcpSocket;
     QStateMachine m_stateMachine;
-    QTimer m_connectionTimer;
+    QTimer m_testConnectionTimer;
+    QTimer m_establishConnectionTimer;
 
 private slots:
     void readMessage();
     void handleDisconnected();
+    void handleConnected();
     void readerTimeout();
 
 private:

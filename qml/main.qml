@@ -210,11 +210,48 @@ ApplicationWindow
             id: quickInfoBackground
             width: parent.width
             height: 40
-            color: "#ddd"
+            color: "#aaa"
+
+            radius: 2
+            border.width: 2
+            border.color: "grey"
 
             RowLayout
             {
                 anchors.fill: parent
+
+                Rectangle
+                {
+                    width: 33
+                    height: 33
+                    color:
+                    { if (readerState === 0)
+                        { return "#f44141"; }
+                        else if (readerState === 1)
+                        { return "#4286f4"; }
+                        else
+                        { return "#60ef40"; }
+                    }
+                    radius: 16
+                    border.width: 3
+                    border.color: "#fff"
+
+                    Image
+                    {
+                        anchors.fill: parent
+                        anchors.margins: 6
+                        source:
+                        {
+                            if (readerState === 0)
+                            { return "img/circle_unchecked_20.png"; }
+                            else if (readerState === 1)
+                            { return "img/circle_checked_20.png"; }
+                            else
+                            { return "img/circle_checked_20.png"; }
+                        }
+
+                    }
+                }
 
                 ColumnLayout
                 {
@@ -227,34 +264,7 @@ ApplicationWindow
                     Text { text: readerAddress  }
                 }
 
-                Item
-                {
-                    //quickInfoSign and or button
-                }
 
-                Rectangle
-                {
-                    width: 35
-                    height: 35
-                    color:
-                    { if (readerState === 0)
-                        { return "red"; }
-                        else if (readerState === 1)
-                        { return "yellow"; }
-                        else
-                        { return "green"; }
-                    }
-                    radius: 3
-                }
-
-                ToolButton
-                {
-                    icon.source: "img/play48.png"
-                    onClicked:
-                    {
-                        readerModel.connectReader(index);
-                    }
-                }
                 ToolButton
                 {
                     icon.source: "img/play48.png"
