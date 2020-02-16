@@ -9,6 +9,14 @@ CReaderModel::CReaderModel()
     initializeReaderTypeList();
 }
 
+CReaderModel::~CReaderModel()
+{
+    for (auto& reader : m_readerList)
+    {
+        reader->disconnect();
+    }
+}
+
 void CReaderModel::initializeReaderTypeList()
 {
     m_readerTypeList = CAbstractReader::readerTypeList();
@@ -45,6 +53,11 @@ bool CReaderModel::addReader(
     QString name,
     QString address)
 {
+    if (type < 0)
+    {
+        return false;
+    }
+
     bool added = addReader(static_cast<CAbstractReader::ReaderType>(type), name);
     if (added)
     {
@@ -84,6 +97,20 @@ void CReaderModel::setIp(
 
     m_readerList[row]->setIp(ip);
     emit dataChanged(index(row), index(row), {DeviceAdressRole});
+}
+
+void CReaderModel::setName(
+        const unsigned int row,
+        const QString name)
+{
+    if (static_cast<int>(row) >= rowCount() ||
+        name == m_readerList[row]->name())
+    {
+        return;
+    }
+
+    m_readerList[row]->setName(name);
+    emit dataChanged(index(row), index(row), {NameRole});
 }
 
 

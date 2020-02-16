@@ -9,6 +9,8 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
     :
     CAbstractReader(name, parent)
 {
+    qDebug() << "CUHFReader constructor";
+
     m_readerType = UHF;
 
     m_tcpSocket = std::make_unique<QTcpSocket>(this);

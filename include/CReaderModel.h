@@ -29,6 +29,7 @@ class CReaderModel : public QAbstractListModel
 
 
     CReaderModel();
+    ~CReaderModel();
 
     QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex & parent = QModelIndex()) const override;
@@ -58,6 +59,10 @@ class CReaderModel : public QAbstractListModel
     Q_INVOKABLE
     void setIp(const unsigned int row,
                const QString ip);
+
+    Q_INVOKABLE
+    void setName(const unsigned int row,
+               const QString name);
 
 
     Q_INVOKABLE

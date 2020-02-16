@@ -18,6 +18,7 @@ Window
         readerIndex = -1;
         cbReaderType.model = readerModel.readerTypes();
         cbReaderType.currentIndex = -1;
+        cbReaderType.enabled = true;
         tfReaderName.clear();
         tfReaderAddress.clear();
     }
@@ -29,10 +30,12 @@ Window
         {
             titleText = "Reader bearbeiten";
             cbReaderType.model = readerModel.readerTypes();
-
-            tfReaderName.text = readerModel.data(index, readerModel.roleIndex("readerName"));
             cbReaderType.currentIndex = readerModel.data(index, readerModel.roleIndex("readerTypeIndex"));
-            tfReaderAddress.text = readerModel.data(index, readerModel.roleIndex("readerAddress"));
+            cbReaderType.enabled = false;
+
+            tfReaderName.setText(readerModel.data(index, readerModel.roleIndex("readerName")));
+
+            tfReaderAddress.setText(readerModel.data(index, readerModel.roleIndex("readerAddress")));
             readerIndex = index;
         }
     }
@@ -40,7 +43,10 @@ Window
     function allInputsAreValid()
     {
         //TODO: implement user input validity check
-        return true;
+        if (cbReaderType.currentIndex >= 0)
+            return true
+        else
+            return false;
     }
 
     Material.theme: Material.Light
@@ -66,107 +72,87 @@ Window
                 height: parent.height - 16
                 anchors.centerIn: parent
 
-                RowLayout
+                ColumnLayout
                 {
                     anchors.fill: parent
+                    spacing: 2
 
-                    ColumnLayout
+                    Item
                     {
-                        Layout.alignment: Qt.AlignTop
-                        Layout.preferredWidth: 170
-                        Layout.fillHeight: true
-                        spacing: 10
-                        Item
-                        {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 50
+                        id: name
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 60
 
-                            Text
-                            {
-                                id: lbReaderName
-                                text: "Name des Readers"
-                            }
-                            TextField
+                        RowLayout
+                        {
+                            anchors.fill: parent
+                            spacing: 10
+
+
+                            TextFieldWithCaption
                             {
                                 id: tfReaderName
-                                anchors.top: lbReaderName.bottom
-                                placeholderText: "Readername"
-                                width: parent.width
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 160
+                                title: "Name des Readers"
+                                placeholder: "Readername"
+                            }
+
+
+                            Item
+                            {
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 160
+                                Text
+                                {
+                                    id: lbReaderType
+                                    text: "Typ"
+                                }
+                                ComboBox
+                                {
+                                    id: cbReaderType
+                                    anchors.top: lbReaderType.bottom
+                                    width: parent.width
+                                }
                             }
                         }
+                    }
 
-                        Item
+
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 60
+
+                        RowLayout
                         {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 50
-                            Text
-                            {
-                                id: lbReaderAddress
-                                text: "IP"
-                            }
-                            TextField
+                            anchors.fill: parent
+                            spacing: 10
+
+                            TextFieldWithCaption
                             {
                                 id: tfReaderAddress
-                                anchors.top: lbReaderAddress.bottom
-                                placeholderText: "192.168.0.1"
-                                width: parent.width
-
-                                //inputMask: "000.000.000.000:0"
-                                //validator: RegExpValidator {
-                                //    regExp: /^((?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5]).){3}(?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5])$/
-                                //}
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 160
+                                title: "IP"
+                                placeholder: "192.168.0.1"
                             }
-
-                        }
-                    }
-
-                    ColumnLayout
-                    {
-                        Layout.alignment: Qt.AlignTop
-                        Layout.preferredWidth: 170
-                        Layout.fillHeight: true
-                        Item
-                        {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 50
-                            Text
-                            {
-                                id: lbReaderType
-                                text: "Typ"
-                            }
-                            ComboBox
-                            {
-                                id: cbReaderType
-                                anchors.top: lbReaderType.bottom
-                                width: parent.width
-                            }
-
-                        }
-                        Item
-                        {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 50
-                            Text
-                            {
-                                id: lbReaderPort
-                                text: "Port/COM"
-                            }
-                            TextField
+                            TextFieldWithCaption
                             {
                                 id: tfReaderPort
-                                anchors.top: lbReaderPort.bottom
-                                placeholderText: "42"
-                                width: parent.width
-
-                                //inputMask: "000.000.000.000:0"
-                                //validator: RegExpValidator {
-                                //    regExp: /^((?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5]).){3}(?:[0-1]?[0-9]?[0-9]|2?[0-4]?[0-9]|25[0-5])$/
-                                //}
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 160
+                                title: "Port/COM"
+                                placeholder: "42"
                             }
-
                         }
                     }
+                    Item {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                    }
+
                 }
+
             }
 
             DropShadow
@@ -219,18 +205,24 @@ Window
                     {
                         if (readerIndex < 0)
                         {
-                            readerModel.addReader(cbReaderType.currentIndex, tfReaderName.text, tfReaderAddress.text);
+                            readerModel.addReader(cbReaderType.currentIndex, tfReaderName.content, tfReaderAddress.content);
                             window.close();
                         }
                         else
                         {
                             if (allInputsAreValid())
                             {
-                                readerModel.setIp(readerIndex, tfReaderAddress.text + ':' + tfReaderPort.text);
+                                readerModel.setIp(readerIndex, tfReaderAddress.content + ':' + tfReaderPort.content);
+                                readerModel.setName(readerIndex, tfReaderName.content);
                                 window.close();
                             }
                         }
                     }
+                }
+                Item
+                {
+                    Layout.preferredWidth: 10;
+                    Layout.preferredHeight: 20
                 }
             }
         }

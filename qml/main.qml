@@ -232,7 +232,7 @@ ApplicationWindow
                         else
                         { return "#60ef40"; }
                     }
-                    radius: 16
+                    radius: 8
                     border.width: 3
                     border.color: "#fff"
 
