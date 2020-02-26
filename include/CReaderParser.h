@@ -28,6 +28,7 @@ struct UltraChipData {
     }
 };
 
+
 class CReaderParser
 {
     static const QDateTime ultraReferenceTime;

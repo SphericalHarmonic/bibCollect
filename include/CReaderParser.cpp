@@ -1,7 +1,9 @@
 #include "CReaderParser.h"
+#include <qdebug.h>
 
 const QDateTime CReaderParser::ultraReferenceTime =
-        QDateTime::fromString("1980-01-01T00:00:00 ", Qt::ISODate);
+        QDateTime::fromString("M1d1y8000:00:00",
+                              "'M'M'd'd'y'yyhh:mm:ss");
 
 CReaderParser::CReaderParser()
 {
@@ -12,6 +14,7 @@ CReaderParser::CReaderParser()
 UltraChipData CReaderParser::parseUltraChip(
     QString chip)
 {
+    qDebug() << chip;
     UltraChipData chipData;
     const auto values = chip.trimmed().split(',');
     if (values.length() != 12)
@@ -74,5 +77,12 @@ QDateTime CReaderParser::ultraChipTime(
     const int seconds,
     const int milliseconds)
 {
-    return ultraReferenceTime.addMSecs(seconds*1000 + milliseconds);
+    qDebug() << ultraReferenceTime;
+    auto time = ultraReferenceTime;
+    qDebug() << time;
+    time = time.addSecs(seconds);
+    qDebug() << time;
+    time = time.addMSecs(milliseconds);
+    qDebug() << "final: " << time;
+    return time;
 }
