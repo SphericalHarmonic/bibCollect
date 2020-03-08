@@ -77,12 +77,7 @@ QDateTime CReaderParser::ultraChipTime(
     const int seconds,
     const int milliseconds)
 {
-    qDebug() << ultraReferenceTime;
     auto time = ultraReferenceTime;
-    qDebug() << time;
     time = time.addSecs(seconds);
-    qDebug() << time;
-    time = time.addMSecs(milliseconds);
-    qDebug() << "final: " << time;
-    return time;
+    return time.addMSecs(milliseconds);
 }

@@ -226,11 +226,11 @@ ApplicationWindow
                     height: 33
                     color:
                     { if (readerState === 0)
-                        { return "#f44141"; }
+                        { return "#F44336" ; }
                         else if (readerState === 1)
-                        { return "#4286f4"; }
+                        { return "#2196F3" ; }
                         else
-                        { return "#60ef40"; }
+                        { return "#4CAF50" ; }
                     }
                     radius: 8
                     border.width: 3
@@ -267,10 +267,19 @@ ApplicationWindow
 
                 ToolButton
                 {
-                    icon.source: "img/play48.png"
+                    icon.source:
+                    {
+                        if (readerState === 2)
+                        { return "img/stop.png"; }
+                        else
+                        { return "img/play48.png"; }
+                    }
                     onClicked:
                     {
-                        readerModel.startReader(index);
+                        if (readerState === 1)
+                        { readerModel.startReader(index); }
+                        else if (readerState === 2)
+                        { readerModel.stopReader(index); }
                     }
                 }
 

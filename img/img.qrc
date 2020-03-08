@@ -7,5 +7,6 @@
         <file>play48.png</file>
         <file>circle_checked_20.png</file>
         <file>circle_unchecked_20.png</file>
+        <file>stop.png</file>
     </qresource>
 </RCC>

@@ -96,13 +96,16 @@ void CUHFReader::connect()
     if (m_tcpSocket->state() != QAbstractSocket::ConnectedState)
     {
         qDebug() << "attempting to connect...";
-        if (m_tcpSocket->state() != QAbstractSocket::UnconnectedState)
+        /*if (m_tcpSocket->state() != QAbstractSocket::UnconnectedState)
         {
             m_tcpSocket->disconnectFromHost();
-            m_tcpSocket->waitForDisconnected(); //might fail under windows sometimes
-        }
+            //m_tcpSocket->waitForDisconnected(); //might fail under windows sometimes
+        }*/
 
-        m_tcpSocket->connectToHost(parseIp(m_ip), 23); //23 is the only possible port for the Ultra
+        if (m_tcpSocket->state() == QAbstractSocket::UnconnectedState)
+        {
+            m_tcpSocket->connectToHost(parseIp(m_ip), 23); //23 is the only possible port for the Ultra
+        }
     }
 }
 
@@ -282,6 +285,7 @@ void CUHFReader::processChipRead(QString message)
     if (chipData.isValid)
     {
         emit tag(chipData.chipCode, chipData.timeStamp);
+        qDebug() << "Chip: " << chipData.chipCode << "Zeit: " << chipData.timeStamp;
     }
 
     //TODO:
