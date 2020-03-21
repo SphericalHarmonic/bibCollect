@@ -54,6 +54,9 @@ class CReaderModel : public QAbstractListModel
     bool addReader(std::unique_ptr<CAbstractReader> reader);
 
     Q_INVOKABLE
+    void deleteReader(int row);
+
+    Q_INVOKABLE
     QStringList readerTypes();
 
     Q_INVOKABLE

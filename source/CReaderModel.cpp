@@ -82,7 +82,20 @@ bool CReaderModel::addReader(
 bool CReaderModel::addReader(std::unique_ptr<CAbstractReader> reader)
 {
     //TODO
+    qDebug() << "addReader not implemented";
     return true;
+}
+
+void CReaderModel::deleteReader(
+    int row)
+{
+    if (row >= 0 && row < rowCount())
+    {
+        beginRemoveRows(QModelIndex(), row, row);
+        m_readerList.erase(m_readerList.begin() + row);
+        endRemoveRows();
+    }
+    //emit dataChanged(index(rowCount() -1), index(rowCount()-1));
 }
 
 void CReaderModel::setIp(

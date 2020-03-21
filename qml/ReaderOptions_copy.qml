@@ -9,7 +9,11 @@ Dialog
 {
     id: window
 
+    //x: (parent.width - width) /2
+    //y: (parent.heigh - height) /2
+
     standardButtons: Dialog.Ok | Dialog.Cancel
+    focus: true
 
     onAccepted: {
         if (readerIndex < 0)        {
@@ -40,6 +44,8 @@ Dialog
         tfReaderName.clear();
         tfReaderAddress.clear();
         standardButton(Dialog.Ok).enabled = false;
+        tfReaderName.focus = true;
+        tfReaderName.textField.forceActiveFocus()
     }
 
     function setupForReader(i)
@@ -56,6 +62,7 @@ Dialog
 
             tfReaderAddress.setText(readerModel.data(index, readerModel.roleIndex("readerAddress")));
             readerIndex = index;
+            tfReaderName.textField.forceActiveFocus();
         }
     }
     
@@ -87,11 +94,12 @@ Dialog
     Pane
     {
         id: readerOptionsPane
-        width: parent.width - 16
-        height: parent.height - 16
+        width: parent.width - 6
+        height: parent.height - 6
         anchors.centerIn: parent
 
         property int elementWidth: 140
+
 
         GridLayout
         {
@@ -106,8 +114,19 @@ Dialog
                 Layout.preferredWidth: readerOptionsPane.elementWidth
                 title: "Name des Readers"
                 placeholder: "Readername"
-            }
 
+                Connections {
+                    target: tfReaderName.textField
+                    onTextChanged: {
+                        toggleOkButton()
+                    }
+                }
+
+                Keys.onPressed: if (event.key === Qt.Key_Return) {
+                                   if (allInputsAreValid())
+                                       accept()
+                                }
+            }
 
             Item
             {
@@ -125,10 +144,12 @@ Dialog
                     width: parent.width
                     onActivated: toggleOkButton();
                 }
+
+                Keys.onPressed: if (event.key === Qt.Key_Return) {
+                                   if (allInputsAreValid())
+                                       accept()
+                                }
             }
-
-
-
 
             TextFieldWithCaption
             {
@@ -137,6 +158,18 @@ Dialog
                 Layout.preferredWidth: readerOptionsPane.elementWidth
                 title: "IP"
                 placeholder: "192.168.0.1"
+
+                Connections {
+                    target: tfReaderAddress.textField
+                    onTextChanged: {
+                        toggleOkButton()
+                    }
+                }
+
+                Keys.onPressed: if (event.key === Qt.Key_Return) {
+                                   if (allInputsAreValid())
+                                       accept()
+                                }
             }
             TextFieldWithCaption
             {
@@ -145,93 +178,20 @@ Dialog
                 Layout.preferredWidth: readerOptionsPane.elementWidth
                 title: "Port/COM"
                 placeholder: "42"
+
+                Connections {
+                    target: tfReaderPort.textField
+                    onTextChanged: {
+                        toggleOkButton()
+                    }
+                }
+
+                Keys.onPressed: if (event.key === Qt.Key_Return) {
+                                   if (allInputsAreValid())
+                                       accept()
+                                }
             }
-
-
-
         }
-
-        /*ColumnLayout
-        {
-            anchors.fill: parent
-            spacing: 2
-
-            Item
-            {
-                id: name
-                Layout.fillWidth: true
-                Layout.preferredHeight: 60
-
-                RowLayout
-                {
-                    anchors.fill: parent
-                    spacing: 10
-
-
-                    TextFieldWithCaption
-                    {
-                        id: tfReaderName
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 160
-                        title: "Name des Readers"
-                        placeholder: "Readername"
-                    }
-
-
-                    Item
-                    {
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 160
-                        Text
-                        {
-                            id: lbReaderType
-                            text: "Typ"
-                        }
-                        ComboBox
-                        {
-                            id: cbReaderType
-                            anchors.top: lbReaderType.bottom
-                            width: parent.width
-                        }
-                    }
-                }
-            }
-
-
-            Item {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 60
-
-                RowLayout
-                {
-                    anchors.fill: parent
-                    spacing: 10
-
-                    TextFieldWithCaption
-                    {
-                        id: tfReaderAddress
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 160
-                        title: "IP"
-                        placeholder: "192.168.0.1"
-                    }
-                    TextFieldWithCaption
-                    {
-                        id: tfReaderPort
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 160
-                        title: "Port/COM"
-                        placeholder: "42"
-                    }
-                }
-            }
-            Item {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
-
-        }*/
-
     }
 
     DropShadow
@@ -247,7 +207,4 @@ Dialog
         smooth: true
         source: readerOptionsPane
     }
-
-
-
 }

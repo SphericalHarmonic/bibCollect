@@ -13,8 +13,8 @@ ApplicationWindow
     Material.accent: Material.DeepOrange
 
     visible: true
-    width: 940
-    height: 680
+    width: 1280
+    height: 800
     title: qsTr("bibCollect")
     property int margin: 7
 

@@ -156,15 +156,25 @@ Pane
             }
 
 
-            ToolButton {icon.source: "img/delete20.png"}
+            ToolButton {
+                icon.source: "img/delete20.png"
+                onClicked: {
+                    readerModel.deleteReader(index)
+                }
+            }
 
         }
     }
 
-    ReaderOptions_copy
-    {
-        id: readerOptions
-        //visible: false;
+    Item {
+        anchors.centerIn: parent
+        width: readerOptions.width
+        height: readerOptions.height
+        ReaderOptions_copy
+        {
+            id: readerOptions
+        }
     }
+
 
 }
