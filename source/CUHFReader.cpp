@@ -12,6 +12,7 @@ CUHFReader::CUHFReader(QString name, QObject* parent)
     qDebug() << "CUHFReader constructor";
 
     m_readerType = UHF;
+    m_port = 23; //23 is the only possible port for the Ultra
 
     m_tcpSocket = std::make_unique<QTcpSocket>(this);
     /*if (!QObject::connect(
@@ -104,7 +105,7 @@ void CUHFReader::connect()
 
         if (m_tcpSocket->state() == QAbstractSocket::UnconnectedState)
         {
-            m_tcpSocket->connectToHost(parseIp(m_ip), 23); //23 is the only possible port for the Ultra
+            m_tcpSocket->connectToHost(parseIp(m_ip), m_port);
         }
     }
 }

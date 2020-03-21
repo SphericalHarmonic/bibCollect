@@ -69,6 +69,9 @@ class CReaderModel : public QAbstractListModel
     void startReader(const unsigned int row);
 
     Q_INVOKABLE
+    void stopReader(const unsigned int row);
+
+    Q_INVOKABLE
     void connectReader(const unsigned int row);
 
 private:

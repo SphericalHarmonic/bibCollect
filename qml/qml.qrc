@@ -8,5 +8,6 @@
         <file>qtquickcontrols2.conf</file>
         <file>ReaderOptions.qml</file>
         <file>TextFieldWithCaption.qml</file>
+        <file>ReaderOptions_copy.qml</file>
     </qresource>
 </RCC>

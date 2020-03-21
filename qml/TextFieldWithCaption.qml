@@ -28,5 +28,6 @@ Item
         placeholderText: placeholder
         width: parent.width
         selectByMouse: true
+
     }
 }

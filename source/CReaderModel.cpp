@@ -210,6 +210,11 @@ void CReaderModel::startReader(const unsigned int row)
     m_readerList[row]->start();
 }
 
+void CReaderModel::stopReader(const unsigned int row)
+{
+    m_readerList[row]->stop();
+}
+
 void CReaderModel::connectReader(const unsigned int row)
 {
     m_readerList[row]->connect();

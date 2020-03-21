@@ -65,7 +65,7 @@ Pane
                             onClicked:
                             {
                                 readerOptions.setupForNewReader();
-                                readerOptions.show();
+                                readerOptions.open();
                             }
                         }
                     }
@@ -161,7 +161,7 @@ Pane
         }
     }
 
-    ReaderOptions
+    ReaderOptions_copy
     {
         id: readerOptions
         //visible: false;
