@@ -1,4 +1,4 @@
-QT += qml quick quickcontrols2 testlib
+QT += qml quick quickcontrols2 testlib sql
 
 CONFIG += c++14
 
@@ -43,9 +43,11 @@ HEADERS += \
     include/CReaderModel.h \
     include/CAbstractReader.h \
     include/CReaderParser.h \
-    include/testcreaderparser.h
+    include/testcreaderparser.h \
+    resultsqlmodel.h
 
 SOURCES += \ # main.cpp #\
+    resultsqlmodel.cpp \
     source/main.cpp \
     source/CUHFReader.cpp \
     source/CAbstractReader.cpp \
@@ -55,6 +57,7 @@ SOURCES += \ # main.cpp #\
 
 
 DISTFILES += \
+    qml/ResultTab.qml \
     qml/qtquickcontrols2.conf \
     qml/ClockWidget.qml \
     qml/HardwareTab.qml \

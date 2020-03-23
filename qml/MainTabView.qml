@@ -118,11 +118,8 @@ Pane
                     anchors.centerIn: parent
                 }
             }
-            Item {
-                Label {
-                    text: qsTr("Ergebnisse")
-                    anchors.centerIn: parent
-                }
+            ResultTab {
+
             }
             Item {
                 Label {
