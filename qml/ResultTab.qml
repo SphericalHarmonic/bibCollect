@@ -27,8 +27,43 @@ Pane
 
                 Component{
                         id: columnComponent
-                        TableViewColumn{width: 100 }
+                        TableViewColumn{
+                            width: 100
+                            delegate: nameDelegate
+                        }
                     }
+
+                Component{
+                    id: nameDelegate
+                    Item{
+                        anchors.fill: parent
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            //color: "green"
+                            elide: styleData.elideMode
+                            text: styleData.value
+                            font.pixelSize: 15
+                        }
+                    }
+                }
+
+                Component{
+                    id: rowDelegateTest
+
+                    Rectangle{
+                        //anchors.fill: parent
+                        height: 30
+
+                        color: {
+                            if (styleData.selected)
+                                return "#9999aa"
+                            else
+                                return styleData.alternate ? "#EEEEEE" : "#FFFFFF"}
+
+                    }
+                }
+
                 TableView {
                     id: resultView
                     anchors.fill: parent
@@ -42,7 +77,14 @@ Pane
                         }
                         return temp
                     }
+
+                    rowDelegate: rowDelegateTest
+                    selectionMode: SelectionMode.ContiguousSelection
+                    backgroundVisible: false
+                    sortIndicatorVisible: true
                 }
+
+
 
 
             }

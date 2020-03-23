@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
     createConnection();
     ResultSqlModel qmodel;
-    qmodel.setQuery("SELECT * FROM times");
+    qmodel.setQuery("SELECT id, FirstName, LastName, strftime('%H:%M:%f', StartTime) as startTime, strftime('%H:%M:%f', NetStartTime) as netStartTime, strftime('%H:%M:%f', Time1) as time1, strftime('%H:%M:%f', Time2) as time2  FROM times");
     engine.rootContext()->setContextProperty("demosqlmodel", &qmodel);
 
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
