@@ -35,13 +35,39 @@ Pane
 
                 Component{
                     id: nameDelegate
-                    Item{
+                    Rectangle{
                         anchors.fill: parent
+                        color: {
+                            if (styleData.selected)
+                                return "#9999aa"
+                            else
+                                return styleData.row % 2 ? "#f8f8f8" : "#FFFFFF"}
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            //color: "green"
+                            color: {
+                                if (styleData.selected)
+                                    return "white"
+                                else
+                                    return "black"}
+                            font.bold: styleData.selected
                             elide: styleData.elideMode
+                            text: styleData.value
+                            font.pixelSize: 15
+                        }
+                    }
+                }
+
+                Component{
+                    id: header
+                    Rectangle{
+                        height: 30
+                        color: "#eeeeee"
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "black"
+                            font.bold: true
+                            //elide: styleData.elideMode
                             text: styleData.value
                             font.pixelSize: 15
                         }
@@ -59,7 +85,7 @@ Pane
                             if (styleData.selected)
                                 return "#9999aa"
                             else
-                                return styleData.alternate ? "#EEEEEE" : "#FFFFFF"}
+                                return styleData.alternate ? "#f8f8f8" : "#FFFFFF"}
 
                     }
                 }
@@ -79,6 +105,7 @@ Pane
                     }
 
                     rowDelegate: rowDelegateTest
+                    headerDelegate: header
                     selectionMode: SelectionMode.ContiguousSelection
                     backgroundVisible: false
                     sortIndicatorVisible: true
