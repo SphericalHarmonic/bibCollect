@@ -9,5 +9,6 @@
         <file>ReaderOptions.qml</file>
         <file>TextFieldWithCaption.qml</file>
         <file>ReaderOptions_copy.qml</file>
+        <file>ResultTab.qml</file>
     </qresource>
 </RCC>
