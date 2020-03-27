@@ -6,7 +6,7 @@ CAbstractTiming::CAbstractTiming(
     QObject *parent)
     :
     QObject(parent),
-    m_table(tableModel)
+    m_times(tableModel)
 {
 
 }

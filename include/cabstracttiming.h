@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QDateTime>
 #include <memory>
-//#include <QList>
+
 
 class QSqlTableModel;
 
@@ -24,8 +24,12 @@ public slots:
     virtual void triggerTag(QString& source, QString tag, QDateTime time) = 0;
     virtual void triggerId(QString& source, int id, QDateTime time) = 0;
 
-private:
-    std::shared_ptr<QSqlTableModel> m_table;
+protected:
+    std::shared_ptr<QSqlTableModel> m_times;
+    QString timeFormat()
+    {
+        return "yyyy-MM-dd hh:mm:ss.zzz";
+    }
 };
 
 #endif // CABSTRACTTIMING_H
