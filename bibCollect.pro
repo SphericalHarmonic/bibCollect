@@ -39,21 +39,25 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += ./include
 
 HEADERS += \
+	include/cclassictiming.h \
     include/CUHFReader.h \
     include/CReaderModel.h \
     include/CAbstractReader.h \
     include/CReaderParser.h \
     include/testcreaderparser.h \
-    resultsqlmodel.h
+	include/resultsqlmodel.h \
+	include/cabstracttiming.h
 
 SOURCES += \ # main.cpp #\
-    resultsqlmodel.cpp \
+	source/cclassictiming.cpp \
+	source/resultsqlmodel.cpp \
+    source/cabstracttiming.cpp \
     source/main.cpp \
     source/CUHFReader.cpp \
     source/CAbstractReader.cpp \
     source/CReaderModel.cpp \
-    include/CReaderParser.cpp \
-    include/testcreaderparser.cpp
+	source/CReaderParser.cpp \
+	source/testcreaderparser.cpp
 
 
 DISTFILES += \
