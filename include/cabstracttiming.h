@@ -2,6 +2,8 @@
 #define CABSTRACTTIMING_H
 
 #include <QObject>
+#include <QDateTime>
+#include <memory>
 //#include <QList>
 
 class QSqlTableModel;

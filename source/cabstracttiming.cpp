@@ -1,4 +1,5 @@
 #include "cabstracttiming.h"
+#include "qsqltablemodel.h"
 
 CAbstractTiming::CAbstractTiming(
     QSqlTableModel* tableModel,
