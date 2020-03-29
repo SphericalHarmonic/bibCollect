@@ -14,8 +14,9 @@ Pane {
     }
 
     function timeChanged() {
-        timeDisplay.text = new Date().toLocaleTimeString(Qt.locale("de_DE"),"hh:mm:ss") + ".5" ;
+        timeDisplay.text = new Date().toLocaleTimeString(Qt.locale("de_DE"),"hh:mm:ss.") + Math.round(new Date().toLocaleTimeString(Qt.locale("de_DE"),"z")/100).toLocaleString(Qt.locale("de_DE"), "f" , 0 );
     }
+
     ColumnLayout
     {
         anchors.fill: parent

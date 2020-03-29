@@ -9,6 +9,7 @@
 #include "resultsqlmodel.h"
 #include <qdebug.h>
 #include "cclassictiming.h"
+#include <QSettings>
 
 static bool createConnection()
 {
@@ -23,6 +24,14 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+
+    QCoreApplication::setOrganizationName("SpringerSport");
+    QCoreApplication::setOrganizationDomain("springer-sport.de");
+    QCoreApplication::setApplicationName("bibCollect");
+
+    QSettings settings;
+    {
+
 
     QQmlApplicationEngine engine;
     QQuickStyle::setStyle("Material");

@@ -39,6 +39,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += ./include
 
 HEADERS += \
+	include/CEvent.h \
 	include/cclassictiming.h \
     include/CUHFReader.h \
     include/CReaderModel.h \
@@ -49,6 +50,7 @@ HEADERS += \
 	include/cabstracttiming.h
 
 SOURCES += \ # main.cpp #\
+	source/CEvent.cpp \
 	source/cclassictiming.cpp \
 	source/resultsqlmodel.cpp \
     source/cabstracttiming.cpp \
