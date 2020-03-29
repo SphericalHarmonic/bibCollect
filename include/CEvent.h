@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include "QtSql/QSqlDatabase"
+#include "QtSql/QSqlTableModel"
+#include "resultsqlmodel.h"
+#include "cabstracttiming.h"
+#include <qdebug.h>
 
 class CReaderModel;
 class QQmlApplicationEngine;
@@ -83,6 +87,8 @@ private:
     //Database components
     QSqlDatabase m_timedb;
     ResultSqlModel m_resultModel;
+    std::shared_ptr<QSqlTableModel> m_timeTableModel;
+    std::shared_ptr<CAbstractTiming> m_timing;
 
     //other application modules
     QQmlApplicationEngine* m_engine;
