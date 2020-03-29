@@ -81,7 +81,7 @@ Pane
             Layout.fillWidth: true
 
 
-            Item {
+            ProjectSettingsTab {
                 Label {
                     text: qsTr("Projekteinstellungen")
                     anchors.centerIn: parent

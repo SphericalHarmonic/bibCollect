@@ -10,5 +10,6 @@
         <file>TextFieldWithCaption.qml</file>
         <file>ReaderOptions_copy.qml</file>
         <file>ResultTab.qml</file>
+        <file>ProjectSettingsTab.qml</file>
     </qresource>
 </RCC>

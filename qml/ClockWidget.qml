@@ -12,16 +12,13 @@ Pane {
         interval: 100; running: true; repeat: true;
         onTriggered: mainClockInfoBox.timeChanged();
     }
-
     function timeChanged() {
         timeDisplay.text = new Date().toLocaleTimeString(Qt.locale("de_DE"),"hh:mm:ss.") + Math.round(new Date().toLocaleTimeString(Qt.locale("de_DE"),"z")/100).toFixed(0);
     }
 
-    ColumnLayout
-    {
+    ColumnLayout {
         anchors.fill: parent
-        Pane
-        {
+        Pane {
             Layout.minimumWidth: 320
             Layout.preferredHeight: 70
             padding: 0
@@ -36,8 +33,7 @@ Pane {
             }
         }
 
-        RowLayout
-        {
+        RowLayout {
             spacing: 0
             Layout.fillHeight: true
 
@@ -68,9 +64,6 @@ Pane {
                 font.pixelSize: 12
                 model: [ "Uhrzeit", "Welle 1", "Welle 2" ]
             }
-
-
-
         }
     }
 }

@@ -63,6 +63,7 @@ SOURCES += \ # main.cpp #\
 
 
 DISTFILES += \
+    qml/ProjectSettingsTab.qml \
     qml/ResultTab.qml \
     qml/qtquickcontrols2.conf \
     qml/ClockWidget.qml \
