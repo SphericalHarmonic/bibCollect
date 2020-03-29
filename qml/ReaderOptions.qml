@@ -230,7 +230,7 @@ Window
 
     Shortcut
     {
-        sequence: StandardKey.
+        //sequence: StandardKey.
         onActivated: view.currentIndex++
     }
 }

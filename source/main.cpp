@@ -5,28 +5,16 @@
 
 #include <CReaderModel.h>
 #include "QtSql/QSqlDatabase"
+#include "QtSql/qsqltablemodel.h"
 #include "resultsqlmodel.h"
 #include <qdebug.h>
+#include "cclassictiming.h"
+#include <QSettings>
 
 static bool createConnection()
 {
 
-    //database test
-    QSqlDatabase timedb = QSqlDatabase::addDatabase("QSQLITE");
-       timedb.setHostName("localhost");
-       timedb.setDatabaseName("C:/Users/Martin/Documents/dev/projects/bibCollect/data/demo.sqlite");
-       //timedb.setUserName("");
-       //timedb.setPassword("");
-    if (timedb.open())
-    {
-        qDebug() << "Database opened!";
-        return true;
-    }
-    else
-    {
-        qDebug() << "Database not opened!";
-        return false;
-    }
+
 
 
     return true;
@@ -37,6 +25,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
+    QCoreApplication::setOrganizationName("SpringerSport");
+    QCoreApplication::setOrganizationDomain("springer-sport.de");
+    QCoreApplication::setApplicationName("bibCollect");
+
+    QSettings settings;
+    {
+
+
     QQmlApplicationEngine engine;
     QQuickStyle::setStyle("Material");
 
@@ -46,10 +42,29 @@ int main(int argc, char *argv[])
 
 
     createConnection();
+    //database test
+    QSqlDatabase timedb = QSqlDatabase::addDatabase("QSQLITE");
+       timedb.setHostName("localhost");
+       timedb.setDatabaseName("C:/temp/demo.sqlite");
+       //timedb.setUserName("");
+       //timedb.setPassword("");
+    if (timedb.open())
+    {
+        qDebug() << "Database open.";
+    }
+    else
+    {
+        qDebug() << "Unable to open database!";
+    }
+
     ResultSqlModel qmodel;
-    qmodel.setQuery("SELECT * FROM times");
+    qmodel.setQuery("SELECT id, FirstName, LastName, YearOfBirth, strftime('%H:%M:%f', StartTime) as startTime, strftime('%H:%M:%f', NetStartTime) as netStartTime, strftime('%H:%M:%f', Time1) as time1, strftime('%H:%M:%f', Time2) as time2  FROM times");
     engine.rootContext()->setContextProperty("demosqlmodel", &qmodel);
 
+    QSqlTableModel timeTableModel(nullptr, timedb);
+    CClassicTiming timing(&timeTableModel);
+    QList<int> testIds{1004};
+    timing.start(testIds, QDateTime::currentDateTimeUtc());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

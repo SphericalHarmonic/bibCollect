@@ -27,8 +27,69 @@ Pane
 
                 Component{
                         id: columnComponent
-                        TableViewColumn{width: 100 }
+                        TableViewColumn{
+                            width: 100
+                            delegate: nameDelegate
+                        }
                     }
+
+                Component{
+                    id: nameDelegate
+                    Rectangle{
+                        anchors.fill: parent
+                        color: {
+                            if (styleData.selected)
+                                return "#9999aa"
+                            else
+                                return styleData.row % 2 ? "#f8f8f8" : "#FFFFFF"}
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: {
+                                if (styleData.selected)
+                                    return "white"
+                                else
+                                    return "black"}
+                            font.bold: styleData.selected
+                            elide: styleData.elideMode
+                            text: styleData.value
+                            font.pixelSize: 15
+                        }
+                    }
+                }
+
+                Component{
+                    id: header
+                    Rectangle{
+                        height: 30
+                        color: "#eeeeee"
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "black"
+                            font.bold: true
+                            //elide: styleData.elideMode
+                            text: styleData.value
+                            font.pixelSize: 15
+                        }
+                    }
+                }
+
+                Component{
+                    id: rowDelegateTest
+
+                    Rectangle{
+                        //anchors.fill: parent
+                        height: 30
+
+                        color: {
+                            if (styleData.selected)
+                                return "#9999aa"
+                            else
+                                return styleData.alternate ? "#f8f8f8" : "#FFFFFF"}
+
+                    }
+                }
+
                 TableView {
                     id: resultView
                     anchors.fill: parent
@@ -42,7 +103,15 @@ Pane
                         }
                         return temp
                     }
+
+                    rowDelegate: rowDelegateTest
+                    headerDelegate: header
+                    selectionMode: SelectionMode.ContiguousSelection
+                    backgroundVisible: false
+                    sortIndicatorVisible: true
                 }
+
+
 
 
             }
