@@ -13,7 +13,14 @@ Pane {
         onTriggered: mainClockInfoBox.timeChanged();
     }
     function timeChanged() {
-        timeDisplay.text = new Date().toLocaleTimeString(Qt.locale("de_DE"),"hh:mm:ss.") + Math.round(new Date().toLocaleTimeString(Qt.locale("de_DE"),"z")/100).toFixed(0);
+        var milliseconds = Math.floor(new Date().toLocaleTimeString(Qt.locale("de_DE"),"z")/100);
+        var msString = milliseconds.toFixed(0);
+        if (milliseconds === 0)
+        {
+            msString = "0"
+        }
+
+        timeDisplay.text = new Date().toLocaleTimeString(Qt.locale("de_DE"),"hh:mm:ss.") + msString;
     }
 
     ColumnLayout {

@@ -91,8 +91,7 @@ Dialog
     height: 300
 
 
-    Pane
-    {
+    Pane {
         id: readerOptionsPane
         width: parent.width - 6
         height: parent.height - 6
@@ -100,15 +99,12 @@ Dialog
 
         property int elementWidth: 140
 
-
-        GridLayout
-        {
+        GridLayout {
             anchors.fill: parent
             rows: 2
             columns: 2
 
-            TextFieldWithCaption
-            {
+            TextFieldWithCaption {
                 id: tfReaderName
                 Layout.fillHeight: true
                 Layout.preferredWidth: readerOptionsPane.elementWidth
@@ -128,15 +124,15 @@ Dialog
                                 }
             }
 
-            Item
-            {
+            Item {
                 Layout.fillHeight: true
                 Layout.preferredWidth: readerOptionsPane.elementWidth
-                Text
-                {
+
+                Text {
                     id: lbReaderType
                     text: "Typ"
                 }
+
                 ComboBox
                 {
                     id: cbReaderType
