@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("readerModel", &readerModel);
 
     CEvent eventManager(&engine, &readerModel);
+    engine.rootContext()->setContextProperty("event", &eventManager);
 
     //createConnection();
     //database test

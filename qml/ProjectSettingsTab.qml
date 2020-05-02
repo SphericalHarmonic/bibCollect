@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
+import QtQuick.Dialogs 1.2
 
 Pane
 {
@@ -55,9 +56,12 @@ Pane
                         Layout.fillWidth: true
                     }
                     Button {
-                        text: "Noch ein Button"
+                        text: "Neues Event..."
                         flat: true
                         Layout.fillWidth: true
+                        onClicked: {
+                            newEventFolderDialog.open()
+                        }
                     }
                 }
             }
@@ -99,6 +103,7 @@ Pane
                         Layout.preferredWidth: 250
                         title: "Name des Wettkampfes"
                         placeholder: "Name"
+                        content: event.eventName
 
                         /*Connections {
                             target: tfReaderName.textField
@@ -127,6 +132,27 @@ Pane
                 smooth: true
                 source: projectOptionsPane
             }
+        }
+    }
+
+    FileDialog {
+        id: newEventFolderDialog
+        selectFolder: false
+        selectMultiple: false
+        defaultSuffix: ".xef"
+        selectExisting: false
+        folder: shortcuts.home
+        sidebarVisible: true
+        title: "Event speichern unter"
+        visible: false
+        onAccepted: {
+            var path = newEventFolderDialog.fileUrl.toString();
+                    // remove prefixed "file:///"
+            path = path.replace(/^(file:\/{3})/,"");
+            var cleanPath = decodeURIComponent(path);
+
+            event.saveToFile(cleanPath);
+            console.log(cleanPath);
         }
     }
 }

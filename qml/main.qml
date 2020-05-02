@@ -165,13 +165,21 @@ ApplicationWindow
                 //text: "Projektname"
                 color: "orange"
                 //font.bold: true
-                Layout.fillWidth: true
+                Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 Layout.alignment: Qt.AlignVCenter
             }
             Label
             {
-                text: "Projektname"
+                text: event.path != "" ? event.path + "/": ""
+                //color: "orange"
+                font.bold: false
+                Layout.fillWidth: false
+                Layout.alignment: Qt.AlignVCenter
+            }
+            Label
+            {
+                text: event.eventName
                 //color: "orange"
                 font.bold: true
                 Layout.fillWidth: true

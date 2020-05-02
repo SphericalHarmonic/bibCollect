@@ -4,6 +4,8 @@
 #include <QQmlContext>
 #include "qdebug.h"
 #include "cclassictiming.h"
+#include <qfile.h>
+#include <QXmlStreamWriter>
 
 CEvent::CEvent(
     QQmlApplicationEngine* engine,
@@ -36,4 +38,28 @@ CEvent::CEvent(
 
     m_timeTableModel = std::make_shared<QSqlTableModel>(this, m_timedb);
     m_timing = std::make_shared<CClassicTiming>(m_timeTableModel.get());
+}
+
+bool CEvent::save()
+{
+    //TODO: implement saving to file
+    qDebug() << "save() not completely implemented";
+
+    QFile file(m_fileName);
+    if ( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+        QXmlStreamWriter stream(&file);
+        stream.setAutoFormatting(true);
+        stream.writeStartDocument();
+
+            stream.writeTextElement("eventname", m_name);
+
+        stream.writeEndDocument();
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

@@ -6,7 +6,7 @@ Item
 {
     property string title: ""
     property string placeholder: ""
-    property string content: textfield.text
+    property alias content: textfield.text
 
     property alias textField: textfield
 
