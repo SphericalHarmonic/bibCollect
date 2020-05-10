@@ -13,6 +13,7 @@ CEvent::CEvent(
     QObject *parent)
     :
     QObject(parent),
+    m_hasFixedRounds(true),
     m_engine(engine),
     m_readerModel(readerModel)
 {
@@ -53,6 +54,7 @@ bool CEvent::save()
         stream.writeStartDocument();
 
             stream.writeTextElement("eventname", m_name);
+            stream.writeTextElement("fixedRounds", QString("%1").arg(m_hasFixedRounds));
 
         stream.writeEndDocument();
 

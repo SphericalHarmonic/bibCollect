@@ -18,6 +18,7 @@ class CEvent : public QObject
     Q_PROPERTY(QString eventName READ name WRITE setName NOTIFY eventNameChanged)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
     Q_PROPERTY(QString path READ path NOTIFY pathChanged)
+    Q_PROPERTY(bool hasFixedRounds READ hasFixedRounds NOTIFY fixedRoundsChanged)
 
 public:
     explicit CEvent(
@@ -67,6 +68,19 @@ public:
         }
     }
 
+    bool hasFixedRounds()
+    {
+        return m_hasFixedRounds;
+    }
+    void setFixedRounds(const bool hasFixedRounds)
+    {
+        if (hasFixedRounds != m_hasFixedRounds)
+        {
+            m_hasFixedRounds = hasFixedRounds;
+            emit fixedRoundsChanged(m_hasFixedRounds);
+        }
+    }
+
     Q_INVOKABLE
     bool loadFromFile(const QString& fileName)
     {
@@ -94,10 +108,19 @@ public:
         return save();
     }
 
+    Q_INVOKABLE
+    void reset(const QString& fileName)
+    {
+        setName("");
+        saveToFile(fileName);
+
+    }
+
 signals:
     void eventNameChanged(const QString& newName);
     void fileNameChanged(const QString& newName);
     void pathChanged(const QString& newPath);
+    void fixedRoundsChanged(const bool hasFixedRounds);
 
 private:
     //members which are saved to file
@@ -106,6 +129,7 @@ private:
     QString m_path;
     QString m_timeDatabaseName;
     QString m_tagDatabaseName;
+    bool m_hasFixedRounds;
 
     //Database components
     QSqlDatabase m_timedb;

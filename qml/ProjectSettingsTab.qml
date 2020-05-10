@@ -60,7 +60,8 @@ Pane
                         flat: true
                         Layout.fillWidth: true
                         onClicked: {
-                            newEventFolderDialog.open()
+                            //newEventFolderDialog.open()
+                            newEventDialog.show();
                         }
                     }
                 }
@@ -155,4 +156,14 @@ Pane
             console.log(cleanPath);
         }
     }
+
+    Item {
+        anchors.centerIn: parent
+        width: newEventDialog.width
+        height: newEventDialog.height
+        NewEventDialog {
+            id: newEventDialog
+        }
+    }
+
 }

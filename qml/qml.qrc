@@ -11,5 +11,6 @@
         <file>ReaderOptions_copy.qml</file>
         <file>ResultTab.qml</file>
         <file>ProjectSettingsTab.qml</file>
+        <file>NewEventDialog.qml</file>
     </qresource>
 </RCC>
